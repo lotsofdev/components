@@ -1,6 +1,9 @@
 {
   "name": "@lotsof/components",
   "components": {
+    "dependencies": {
+      "@lotsof/components-test": true
+    },
     "folders": ["components/*"]
   }
 }
