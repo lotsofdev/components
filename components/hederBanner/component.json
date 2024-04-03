@@ -1,5 +1,8 @@
 {
   "version": "0.0.1",
   "name": "headerBanner",
-  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo"
+  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo",
+  "dependencies": {
+    "@lotsof/components/config": "^0.0.1"
+  }
 }
