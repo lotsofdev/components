@@ -2,14 +2,16 @@
   "version": "0.0.1",
   "name": "helloWorld",
   "description": "Simple hello world component to test the component system",
+  "files": ["helloWorld.css"],
   "subset": {
     "engine": {
       "question": "Which engine do you want to use?",
       "type": "list",
-      "choices": ["twig", "blade"],
+      "choices": ["twig", "blade", "html"],
       "files": {
         "twig": "*.twig",
-        "blade": "*.blade.php"
+        "blade": "*.blade.php",
+        "html": "*.html"
       }
     }
   },
