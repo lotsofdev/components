@@ -4,9 +4,8 @@
   "components": {
     "dependencies": {
       "@lotsof/components-test": {
-        "name": "Lotsof components test",
         "type": "git",
-        "repository": "git@github.com:lotsofdev/components-test.git"
+        "url": "git@github.com:lotsofdev/components-test.git"
       }
     },
     "folders": ["components/*"]
