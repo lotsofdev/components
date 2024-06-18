@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "name": "helloWorld",
+  "description": "Simple hello world component to test the component system",
+  "subset": {
+    "engine": {
+      "question": "Which engine do you want to use?",
+      "type": "list",
+      "choices": ["twig", "blade"],
+      "files": {
+        "twig": "*.twig",
+        "blade": "*.blade.php"
+      }
+    }
+  },
+  "dependencies": {
+    "@lotsof/components/config": "^0.0.1"
+  }
+}
