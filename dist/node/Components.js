@@ -65,13 +65,12 @@ export default class Components {
     getPackages(sourceIds) {
         const packages = {};
         // list components in the root folder
-        const lotsofJsonFiles = __globSync([
+        const componentsJsonFiles = __globSync([
             `${this.libraryRootDir}/*/components.json`,
             `${this.libraryRootDir}/*/*/components.json`,
         ]);
-        for (let [i, jsonPath] of lotsofJsonFiles.entries()) {
-            const p = new ComponentPackage({
-                rootDir: __path.dirname(jsonPath),
+        for (let [i, jsonPath] of componentsJsonFiles.entries()) {
+            const p = new ComponentPackage(__path.dirname(jsonPath), {
                 $components: this,
             });
             packages[p.name] = p;

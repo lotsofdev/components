@@ -32,7 +32,6 @@ export interface IComponentsPackageJson {
 }
 
 export interface IComponentsPackageSettings {
-  rootDir: string;
   $components: Components;
 }
 

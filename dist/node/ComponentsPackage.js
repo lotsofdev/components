@@ -10,13 +10,14 @@ export default class ComponentPackage {
         return (_a = this.componentsJson.description) !== null && _a !== void 0 ? _a : this.name;
     }
     get rootDir() {
-        return this.settings.rootDir;
+        return this._rootDir;
     }
     get version() {
         return this.componentsJson.version;
     }
-    constructor(settings) {
+    constructor(rootDir, settings) {
         this.settings = settings;
+        this._rootDir = rootDir;
         // reading the "components.json" file
         this.componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
     }
@@ -31,6 +32,7 @@ export default class ComponentPackage {
         }
         // list components
         for (let [i, path] of folders.entries()) {
+            console.log(path, this.rootDir);
             const components = __globSync(path, {
                 cwd: this.rootDir,
             });

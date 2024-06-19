@@ -25,7 +25,6 @@ export interface IComponentsPackageJson {
     description?: string;
 }
 export interface IComponentsPackageSettings {
-    rootDir: string;
     $components: Components;
 }
 export interface IComponentJsonSubset {

@@ -14,6 +14,8 @@ export default class ComponentPackage {
   public settings: IComponentsPackageSettings;
   public componentsJson: IComponentsPackageJson;
 
+  private _rootDir: string;
+
   public get name(): string {
     return this.componentsJson.name;
   }
@@ -23,15 +25,16 @@ export default class ComponentPackage {
   }
 
   public get rootDir(): string {
-    return this.settings.rootDir;
+    return this._rootDir;
   }
 
   public get version(): string {
     return this.componentsJson.version;
   }
 
-  constructor(settings: IComponentsPackageSettings) {
+  constructor(rootDir: string, settings: IComponentsPackageSettings) {
     this.settings = settings;
+    this._rootDir = rootDir;
 
     // reading the "components.json" file
     this.componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
@@ -49,6 +52,8 @@ export default class ComponentPackage {
 
     // list components
     for (let [i, path] of folders.entries()) {
+      console.log(path, this.rootDir);
+
       const components = __globSync(path, {
         cwd: this.rootDir,
       });
