@@ -12,11 +12,8 @@ export default class ComponentSource {
     get id() {
         return this.settings.id;
     }
-    get rootDir() {
-        return `${this.components.rootDir}/${this.id}`;
-    }
-    get components() {
-        return this.settings.components;
+    get $components() {
+        return this.settings.$components;
     }
     get name() {
         return this.settings.name;
@@ -34,16 +31,16 @@ export default class ComponentSource {
             // set if updated or not
             this.updated = updated;
             // get the components.json file from the updated component
-            const componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
+            const componentsJson = __readJsonSync(`${this.$components.libraryRootDir}/${this.id}/components.json`);
             // check dependencies
             for (let [id, sourceSettings] of Object.entries((_a = componentsJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
                 // if source already registered, avoid continue
-                if ((_b = this.components) === null || _b === void 0 ? void 0 : _b.getSources()[id]) {
+                if ((_b = this.$components) === null || _b === void 0 ? void 0 : _b.getSources()[id]) {
                     continue;
                 }
                 // register new source
                 sourceSettings.id = id;
-                const newSource = (_c = this.components) === null || _c === void 0 ? void 0 : _c.registerSourceFromSettings(sourceSettings);
+                const newSource = (_c = this.$components) === null || _c === void 0 ? void 0 : _c.registerSourceFromSettings(sourceSettings);
                 // updating new source
                 yield (newSource === null || newSource === void 0 ? void 0 : newSource.update());
             }

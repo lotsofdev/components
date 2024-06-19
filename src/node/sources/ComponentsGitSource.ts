@@ -19,7 +19,7 @@ export default class GitSource extends ComponentSource {
 
     // cloning the repo
     const res = await __childProcess.spawnSync(
-      `git clone ${this.settings.url} ${this.components.libraryRootDir}/${this.id}`,
+      `git clone ${this.settings.url} ${this.$components.libraryRootDir}/${this.id}`,
       [],
       {
         shell: true,
@@ -32,7 +32,7 @@ export default class GitSource extends ComponentSource {
     if (output.includes('already exists')) {
       // try to pull the repo
       const pullRes = await __childProcess.spawnSync(`git pull`, [], {
-        cwd: `${this.components.libraryRootDir}/${this.id}`,
+        cwd: `${this.$components.libraryRootDir}/${this.id}`,
         shell: true,
       });
       const pullOutput = pullRes.output?.toString().split(',').join('') ?? '';

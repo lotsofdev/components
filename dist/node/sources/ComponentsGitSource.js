@@ -22,7 +22,7 @@ export default class GitSource extends ComponentSource {
             var _a, _b, _c, _d;
             let updated = false;
             // cloning the repo
-            const res = yield __childProcess.spawnSync(`git clone ${this.settings.url} ${this.components.libraryRootDir}/${this.id}`, [], {
+            const res = yield __childProcess.spawnSync(`git clone ${this.settings.url} ${this.$components.libraryRootDir}/${this.id}`, [], {
                 shell: true,
             });
             const output = (_b = (_a = res.output) === null || _a === void 0 ? void 0 : _a.toString()) !== null && _b !== void 0 ? _b : '';
@@ -30,7 +30,7 @@ export default class GitSource extends ComponentSource {
             if (output.includes('already exists')) {
                 // try to pull the repo
                 const pullRes = yield __childProcess.spawnSync(`git pull`, [], {
-                    cwd: `${this.components.libraryRootDir}/${this.id}`,
+                    cwd: `${this.$components.libraryRootDir}/${this.id}`,
                     shell: true,
                 });
                 const pullOutput = (_d = (_c = pullRes.output) === null || _c === void 0 ? void 0 : _c.toString().split(',').join('')) !== null && _d !== void 0 ? _d : '';

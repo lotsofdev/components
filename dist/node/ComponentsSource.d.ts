@@ -4,8 +4,7 @@ export default abstract class ComponentSource {
     settings: IComponentsSourceSettings;
     updated: boolean;
     get id(): string;
-    get rootDir(): string;
-    get components(): Components;
+    get $components(): Components;
     get name(): string;
     get type(): string;
     constructor(settings?: Partial<IComponentsSourceSettings>);

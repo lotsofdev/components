@@ -15,12 +15,8 @@ export default abstract class ComponentSource {
     return this.settings.id;
   }
 
-  public get rootDir(): string {
-    return `${this.components.rootDir}/${this.id}`;
-  }
-
-  public get components(): Components {
-    return this.settings.components;
+  public get $components(): Components {
+    return this.settings.$components;
   }
 
   public get name(): string {
@@ -42,20 +38,22 @@ export default abstract class ComponentSource {
     this.updated = updated;
 
     // get the components.json file from the updated component
-    const componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
+    const componentsJson = __readJsonSync(
+      `${this.$components.libraryRootDir}/${this.id}/components.json`,
+    );
 
     // check dependencies
     for (let [id, sourceSettings] of Object.entries(
       componentsJson.dependencies ?? {},
     )) {
       // if source already registered, avoid continue
-      if (this.components?.getSources()[id]) {
+      if (this.$components?.getSources()[id]) {
         continue;
       }
 
       // register new source
       (<IComponentsSourceSettings>sourceSettings).id = id;
-      const newSource = this.components?.registerSourceFromSettings(
+      const newSource = this.$components?.registerSourceFromSettings(
         <IComponentsSourceSettings>sourceSettings,
       );
 
