@@ -9,12 +9,12 @@
   },
   "composerJson": {
     "dependencies": {
-      "lotsof/types": "^0.0.1"
+      "lotsof/types": "^1.0.0"
     }
   },
   "packageJson": {
     "dependencies": {
-      "@lotsof/types": "^0.0.5"
+      "@lotsof/types": "^1.0.2"
     }
   }
 }
