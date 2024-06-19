@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "1.0.0",
   "name": "@lotsof/components",
   "dependencies": {
     "@lotsof/components-test": {
@@ -14,7 +14,7 @@
   },
   "packageJson": {
     "dependencies": {
-      "@lotsof/types": "^1.0.2"
+      "@lotsof/types": "^1.0.0"
     }
   }
 }

@@ -292,9 +292,9 @@ export default class Components {
 
     // handle "packageJson" from package
     if (component.package?.componentsJson?.packageJson) {
-      // adding composer dependencies
-
+      // adding npm dependencies
       if (component.package.componentsJson.packageJson.dependencies) {
+        console.log('Adding npm dependencies and installing them...');
         await __addPackageDependencies(
           component.package.componentsJson.packageJson.dependencies,
           {
@@ -302,8 +302,6 @@ export default class Components {
           },
         );
       }
-
-      console.log('packageJson', component.package.packageJson);
     }
 
     return {

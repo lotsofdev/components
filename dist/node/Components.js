@@ -207,13 +207,13 @@ export default class Components {
             }
             // handle "packageJson" from package
             if ((_b = (_a = component.package) === null || _a === void 0 ? void 0 : _a.componentsJson) === null || _b === void 0 ? void 0 : _b.packageJson) {
-                // adding composer dependencies
+                // adding npm dependencies
                 if (component.package.componentsJson.packageJson.dependencies) {
+                    console.log('Adding npm dependencies and installing them...');
                     yield __addPackageDependencies(component.package.componentsJson.packageJson.dependencies, {
                         install: true,
                     });
                 }
-                console.log('packageJson', component.package.packageJson);
             }
             return {
                 component,

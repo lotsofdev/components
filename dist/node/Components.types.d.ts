@@ -40,6 +40,13 @@ export interface IComponentJson {
     subset?: IComponentJsonSubset;
     dependencies?: Record<string, string | IComponent>;
 }
+export interface IComponentsPackageDependency {
+    type: 'npm' | 'composer' | 'component';
+    version: string;
+}
+export interface IComponentsPackageDependencies {
+    [key: string]: IComponentsPackageDependency;
+}
 export interface IComponent extends IComponentJson {
     package: ComponentsPackage;
     path: string;

@@ -1,6 +1,6 @@
 {
   "name": "@lotsof/components",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Components system to share components libraries easily",
   "type": "module",
   "author": "Olivier Bossel <olivier.bossel@gmail.com> (https://coffeekraken.io)",
@@ -10,8 +10,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@lotsof/config": "^0.0.1",
-    "@lotsof/sugar": "^0.0.1",
+    "@lotsof/config": "^1.0.0",
+    "@lotsof/sugar": "^1.0.0",
     "typescript": "^5.4.5",
     "glob": "^10.4.1"
   },

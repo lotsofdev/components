@@ -32,6 +32,50 @@ export default class ComponentPackage {
     return this.componentsJson.version;
   }
 
+  public get dependencies(): IComponentsPackageDependencies {
+    const dependencies: IComponentsPackageDependencies = {};
+
+    if (this.componentsJson.dependencies) {
+      for (let [name, dep] of Object.entries(
+        this.componentsJson.dependencies,
+      )) {
+        dependencies[name] = {
+          type: 'component',
+          version: dep,
+        };
+      }
+    }
+
+    const npmDependencies = {
+      ...(this.componentsJson.packageJson.dependencies ?? {}),
+      ...(this.componentsJson.packageJson.devDependencies ?? {}),
+      ...(this.componentsJson.packageJson.globalDependencies ?? {}),
+    };
+    if (Object.keys(npmDependencies).length) {
+      for (let [name, dep] of Object.entries(npmDependencies)) {
+        dependencies[name] = {
+          type: 'npm',
+          version: dep,
+        };
+      }
+    }
+
+    const composerDependencies = {
+      ...(this.componentsJson.composerJson.require ?? {}),
+      ...(this.componentsJson.composerJson['require-dev'] ?? {}),
+    };
+    if (Object.keys(composerDependencies).length) {
+      for (let [name, dep] of Object.entries(composerDependencies)) {
+        dependencies[name] = {
+          type: 'composer',
+          version: dep,
+        };
+      }
+    }
+
+    return dependencies;
+  }
+
   constructor(rootDir: string, settings: IComponentsPackageSettings) {
     this.settings = settings;
     this._rootDir = rootDir;

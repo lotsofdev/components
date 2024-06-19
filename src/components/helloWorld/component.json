@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "1.0.0",
   "name": "helloWorld",
   "description": "Simple hello world component to test the component system",
   "files": ["helloWorld.css"],
@@ -16,6 +16,6 @@
     }
   },
   "dependencies": {
-    "@lotsof/components/config": "^0.0.1"
+    "@lotsof/components/config": "^1.0.0"
   }
 }

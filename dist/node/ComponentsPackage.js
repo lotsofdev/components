@@ -15,6 +15,37 @@ export default class ComponentPackage {
     get version() {
         return this.componentsJson.version;
     }
+    get dependencies() {
+        var _a, _b, _c, _d, _e;
+        const dependencies = {};
+        if (this.componentsJson.dependencies) {
+            for (let [name, dep] of Object.entries(this.componentsJson.dependencies)) {
+                dependencies[name] = {
+                    type: 'component',
+                    version: dep,
+                };
+            }
+        }
+        const npmDependencies = Object.assign(Object.assign(Object.assign({}, ((_a = this.componentsJson.packageJson.dependencies) !== null && _a !== void 0 ? _a : {})), ((_b = this.componentsJson.packageJson.devDependencies) !== null && _b !== void 0 ? _b : {})), ((_c = this.componentsJson.packageJson.globalDependencies) !== null && _c !== void 0 ? _c : {}));
+        if (Object.keys(npmDependencies).length) {
+            for (let [name, dep] of Object.entries(npmDependencies)) {
+                dependencies[name] = {
+                    type: 'npm',
+                    version: dep,
+                };
+            }
+        }
+        const composerDependencies = Object.assign(Object.assign({}, ((_d = this.componentsJson.composerJson.require) !== null && _d !== void 0 ? _d : {})), ((_e = this.componentsJson.composerJson['require-dev']) !== null && _e !== void 0 ? _e : {}));
+        if (Object.keys(composerDependencies).length) {
+            for (let [name, dep] of Object.entries(composerDependencies)) {
+                dependencies[name] = {
+                    type: 'composer',
+                    version: dep,
+                };
+            }
+        }
+        return dependencies;
+    }
     constructor(rootDir, settings) {
         this.settings = settings;
         this._rootDir = rootDir;
