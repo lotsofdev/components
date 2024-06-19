@@ -5,7 +5,7 @@
   "files": ["helloWorld.css"],
   "subset": {
     "engine": {
-      "question": "Which engine do you want to use?",
+      "question": "Which engine do you use?",
       "type": "list",
       "choices": ["twig", "blade", "html"],
       "files": {
@@ -17,5 +17,15 @@
   },
   "dependencies": {
     "@lotsof/components/config": "^0.0.1"
+  },
+  "composerJson": {
+    "dependencies": {
+      "lotsof/types": "^0.0.1"
+    }
+  },
+  "packageJson": {
+    "dependencies": {
+      "@lotsof/types": "^0.0.1"
+    }
   }
 }

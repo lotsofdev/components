@@ -1,0 +1,16 @@
+{
+  "exclude": ["lotsof.config.ts", "./dist/**/*"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "rootDir": "src/node",
+    "outDir": "dist/node",
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es6",
+    "module": "nodenext",
+    "sourceMap": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "moduleResolution": "nodenext"
+  }
+}
