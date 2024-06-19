@@ -6,5 +6,15 @@
       "type": "git",
       "url": "git@github.com:lotsofdev/components-test.git"
     }
+  },
+  "composerJson": {
+    "dependencies": {
+      "lotsof/types": "^0.0.1"
+    }
+  },
+  "packageJson": {
+    "dependencies": {
+      "@lotsof/types": "^0.0.1"
+    }
   }
 }

@@ -32,7 +32,6 @@ export default class ComponentPackage {
         }
         // list components
         for (let [i, path] of folders.entries()) {
-            console.log(path, this.rootDir);
             const components = __globSync(path, {
                 cwd: this.rootDir,
             });

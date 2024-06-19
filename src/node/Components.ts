@@ -213,9 +213,7 @@ export default class Components {
           const resolvedFiles = __glob.sync(`${component.path}/${file}`);
           for (let resolvedFile of resolvedFiles) {
             const relPath = resolvedFile.replace(`${component.path}/`, '');
-            copyMap[
-              resolvedFile
-            ] = `${options.dir}/${component.name}/${relPath}`;
+            copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
           }
         }
       }
@@ -251,9 +249,7 @@ export default class Components {
           const resolvedFiles = __glob.sync(`${component.path}/${file}`);
           for (let resolvedFile of resolvedFiles) {
             const relPath = resolvedFile.replace(`${component.path}/`, '');
-            copyMap[
-              resolvedFile
-            ] = `${options.dir}/${component.name}/${relPath}`;
+            copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
           }
         }
       }
@@ -291,6 +287,13 @@ export default class Components {
           component.dependencies[dependencyId] = dependendiesRes.component;
         }
       }
+    }
+
+    console.log(component);
+
+    // handle "composerJson" from package
+    if (component.package?.composerJson) {
+      console.log('composerJson', component.package.composerJson);
     }
 
     return {

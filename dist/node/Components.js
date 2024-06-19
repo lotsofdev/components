@@ -88,6 +88,7 @@ export default class Components {
     }
     addComponent(componentId_1, options_1) {
         return __awaiter(this, arguments, void 0, function* (componentId, options, isDependency = false) {
+            var _a;
             options = Object.assign({ dir: `${__packageRootDir()}/src/components`, y: false, override: false }, (options !== null && options !== void 0 ? options : {}));
             // get components list
             const components = yield this.getComponents();
@@ -145,7 +146,7 @@ export default class Components {
                         const resolvedFiles = __glob.sync(`${component.path}/${file}`);
                         for (let resolvedFile of resolvedFiles) {
                             const relPath = resolvedFile.replace(`${component.path}/`, '');
-                            copyMap[resolvedFile] = `${options.dir}/${component.name}/${relPath}`;
+                            copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
                         }
                     }
                 }
@@ -175,7 +176,7 @@ export default class Components {
                         const resolvedFiles = __glob.sync(`${component.path}/${file}`);
                         for (let resolvedFile of resolvedFiles) {
                             const relPath = resolvedFile.replace(`${component.path}/`, '');
-                            copyMap[resolvedFile] = `${options.dir}/${component.name}/${relPath}`;
+                            copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
                         }
                     }
                 }
@@ -202,6 +203,11 @@ export default class Components {
                         component.dependencies[dependencyId] = dependendiesRes.component;
                     }
                 }
+            }
+            console.log(component);
+            // handle "composerJson" from package
+            if ((_a = component.package) === null || _a === void 0 ? void 0 : _a.composerJson) {
+                console.log('composerJson', component.package.composerJson);
             }
             return {
                 component,
