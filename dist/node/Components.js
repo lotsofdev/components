@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import __inquier from 'inquirer';
 import * as __glob from 'glob';
+import { __addPackageDependencies } from '@lotsof/sugar/package';
 import { __getConfig } from '@lotsof/config';
 import './Components.config.js';
 import ComponentGitSource from './sources/ComponentsGitSource.js';
@@ -88,7 +89,7 @@ export default class Components {
     }
     addComponent(componentId_1, options_1) {
         return __awaiter(this, arguments, void 0, function* (componentId, options, isDependency = false) {
-            var _a;
+            var _a, _b;
             options = Object.assign({ dir: `${__packageRootDir()}/src/components`, y: false, override: false }, (options !== null && options !== void 0 ? options : {}));
             // get components list
             const components = yield this.getComponents();
@@ -204,10 +205,15 @@ export default class Components {
                     }
                 }
             }
-            console.log(component);
-            // handle "composerJson" from package
-            if ((_a = component.package) === null || _a === void 0 ? void 0 : _a.composerJson) {
-                console.log('composerJson', component.package.composerJson);
+            // handle "packageJson" from package
+            if ((_b = (_a = component.package) === null || _a === void 0 ? void 0 : _a.componentsJson) === null || _b === void 0 ? void 0 : _b.packageJson) {
+                // adding composer dependencies
+                if (component.package.componentsJson.packageJson.dependencies) {
+                    yield __addPackageDependencies(component.package.componentsJson.packageJson.dependencies, {
+                        install: true,
+                    });
+                }
+                console.log('packageJson', component.package.packageJson);
             }
             return {
                 component,

@@ -1,5 +1,6 @@
 import __inquier from 'inquirer';
 import * as __glob from 'glob';
+import { __addPackageDependencies } from '@lotsof/sugar/package';
 
 import { __getConfig } from '@lotsof/config';
 
@@ -289,11 +290,20 @@ export default class Components {
       }
     }
 
-    console.log(component);
+    // handle "packageJson" from package
+    if (component.package?.componentsJson?.packageJson) {
+      // adding composer dependencies
 
-    // handle "composerJson" from package
-    if (component.package?.composerJson) {
-      console.log('composerJson', component.package.composerJson);
+      if (component.package.componentsJson.packageJson.dependencies) {
+        await __addPackageDependencies(
+          component.package.componentsJson.packageJson.dependencies,
+          {
+            install: true,
+          },
+        );
+      }
+
+      console.log('packageJson', component.package.packageJson);
     }
 
     return {
