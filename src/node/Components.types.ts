@@ -1,6 +1,5 @@
 import Components from './Components.js';
-import __ComponentsComents from './ComponentsComponent.js';
-import ComponentsSource from './ComponentsSource.js';
+import ComponentsLibrary from './ComponentsLibrary.js';
 import { __ComponentsComponent } from './_exports.js';
 
 export interface IComponentsState {
@@ -26,18 +25,11 @@ export interface IComponentDefaults {
   engine?: string;
 }
 
-export interface IComponentsSourceSettings {
-  id: string;
-  name: string;
-  type: 'git';
-  $components: Components;
+export interface IComponentsComponentsJson {
+  libraries?: Record<string, IComponentsLibrarySettings>;
 }
 
-export interface IComponentGitSourceSettings extends IComponentsSourceSettings {
-  url: string;
-}
-
-export interface IComponentsPackageJson {
+export interface IComponentsLibraryJson {
   version: string;
   name: string;
   description?: string;
@@ -62,7 +54,10 @@ export interface IComponentsComponentSettings {
   $components: Components;
 }
 
-export interface IComponentsPackageSettings {
+export interface IComponentsLibrarySettings {
+  name: string;
+  type: 'git';
+  url?: string;
   $components: Components;
 }
 
@@ -77,7 +72,9 @@ export interface IComponentsDependency {
   name: string;
   type: 'npm' | 'composer' | 'component';
   version: string;
-  component?: __ComponentsComents;
+  dev?: boolean;
+  level: 'library' | 'component';
+  component?: __ComponentsComponent;
 }
 
 export interface IComponentsDependencies {
@@ -86,22 +83,21 @@ export interface IComponentsDependencies {
 
 export interface IComponentsSettings {
   libraryRootDir: string;
-  // stateFilePath: string;
   defaults: IComponentDefaults;
 }
 
-export interface IComponentsSourceUpdateResult {
+export interface IComponentsLibraryUpdateResult {
   updated: boolean;
 }
 
-export interface IComponentsSourcesUpdateResult {
-  sources: Record<string, ComponentsSource>;
+export interface IComponentsLibrariesUpdateResult {
+  libraries: Record<string, ComponentsLibrary>;
 }
 
 export interface IComponentsAddComponentOptions {
   dir: string;
   y: boolean;
-  override: boolean;
+  name?: string;
   engine?: string;
 }
 

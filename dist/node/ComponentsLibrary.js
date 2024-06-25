@@ -7,12 +7,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-import { __addPackageDependencies } from '@lotsof/sugar/package';
+import __childProcess from 'child_process';
+import __ComponentsDependency from './ComponentsDependency.js';
 import { __existsSync } from '@lotsof/sugar/fs';
 import { globSync as __globSync } from 'glob';
 import { __readJsonSync } from '@lotsof/sugar/fs';
 import __ComponentsComponent from './ComponentsComponent.js';
-export default class ComponentsPackage {
+export default class ComponentsLibrary {
     get settings() {
         return this._settings;
     }
@@ -37,6 +38,7 @@ export default class ComponentsPackage {
     }
     constructor(rootDir, settings) {
         this._dependencies = {};
+        this.updated = false;
         this._settings = settings;
         this._rootDir = rootDir;
         this._componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
@@ -74,87 +76,106 @@ export default class ComponentsPackage {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
         if (this.componentsJson.dependencies) {
             for (let [name, dep] of Object.entries((_a = this.componentsJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
-                this.addDependency(name, {
-                    name,
+                const dependency = new __ComponentsDependency({
                     type: 'component',
+                    level: 'library',
+                    name,
                     version: dep,
                 });
+                this.addDependency(dependency);
             }
         }
         const npmDependencies = Object.assign(Object.assign(Object.assign({}, ((_d = (_c = (_b = this.componentsJson) === null || _b === void 0 ? void 0 : _b.packageJson) === null || _c === void 0 ? void 0 : _c.dependencies) !== null && _d !== void 0 ? _d : {})), ((_g = (_f = (_e = this.componentsJson) === null || _e === void 0 ? void 0 : _e.packageJson) === null || _f === void 0 ? void 0 : _f.devDependencies) !== null && _g !== void 0 ? _g : {})), ((_k = (_j = (_h = this.componentsJson) === null || _h === void 0 ? void 0 : _h.packageJson) === null || _j === void 0 ? void 0 : _j.globalDependencies) !== null && _k !== void 0 ? _k : {}));
         if (Object.keys(npmDependencies).length) {
             for (let [name, dep] of Object.entries(npmDependencies)) {
-                this.addDependency(name, {
-                    name,
+                const dependency = new __ComponentsDependency({
                     type: 'npm',
+                    level: 'library',
+                    name,
                     version: dep,
                 });
+                this.addDependency(dependency);
             }
         }
         const composerDependencies = Object.assign(Object.assign({}, ((_m = (_l = this.componentsJson.composerJson) === null || _l === void 0 ? void 0 : _l.require) !== null && _m !== void 0 ? _m : {})), ((_p = (_o = this.componentsJson.composerJson) === null || _o === void 0 ? void 0 : _o['require-dev']) !== null && _p !== void 0 ? _p : {}));
         if (Object.keys(composerDependencies).length) {
             for (let [name, dep] of Object.entries(composerDependencies)) {
-                this.addDependency(name, {
-                    name,
+                const dependency = new __ComponentsDependency({
                     type: 'composer',
+                    level: 'library',
+                    name,
                     version: dep,
                 });
+                this.addDependency(dependency);
             }
         }
     }
     hasDependencies() {
         return Object.keys(this._dependencies).length > 0;
     }
-    addDependency(name, dependency) {
-        switch (dependency.type) {
-            case 'component':
-            case 'npm':
-            case 'composer':
-                this._dependencies[name] = dependency;
-                break;
-            default:
-                throw new Error(`Unknown dependency type "${dependency.type}" for dependency "${name}"`);
-                break;
-        }
+    addDependency(dependency) {
+        this._dependencies[dependency.name] = dependency;
     }
     installDependencies() {
         return __awaiter(this, arguments, void 0, function* (type = ['npm', 'composer']) {
+            let installedDependencies = [];
             if (Array.isArray(type) && !type.length) {
-                return;
+                return [];
             }
             if (Array.isArray(type)) {
                 for (let t of type) {
-                    yield this.installDependencies(t);
+                    const dep = yield this.installDependencies(t);
+                    installedDependencies = Object.assign(Object.assign({}, installedDependencies), dep);
                 }
-                return;
+                return installedDependencies;
             }
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
-                var _a, _b, _c;
-                switch (type) {
-                    case 'npm':
-                        console.log(`│ Installing <magenta>NPM</magenta> package level dependencies...`);
-                        if ((_a = this.componentsJson.packageJson) === null || _a === void 0 ? void 0 : _a.dependencies) {
-                            yield __addPackageDependencies(this.componentsJson.packageJson.dependencies, {
-                                install: true,
-                            });
-                        }
-                        if ((_b = this.componentsJson.packageJson) === null || _b === void 0 ? void 0 : _b.devDependencies) {
-                            yield __addPackageDependencies(this.componentsJson.packageJson.devDependencies, {
-                                dev: true,
-                                install: true,
-                            });
-                        }
-                        if ((_c = this.componentsJson.packageJson) === null || _c === void 0 ? void 0 : _c.globalDependencies) {
-                            yield __addPackageDependencies(this.componentsJson.packageJson.globalDependencies, {
-                                global: true,
-                                install: true,
-                            });
-                        }
-                        break;
+                for (let [name, dep] of Object.entries(this.dependencies)) {
+                    if (type !== dep.type) {
+                        continue;
+                    }
+                    yield dep.install();
+                    installedDependencies.push(dep);
                 }
-                resolve();
+                resolve(installedDependencies);
             }));
         });
     }
+    update() {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b, _c, _d, _e, _f, _g;
+            // get the components.json file from the updated component
+            const componentsJson = __readJsonSync(`${this.settings.$components.libraryRootDir}/${this.name}/components.json`);
+            // check dependencies
+            for (let [name, sourceSettings] of Object.entries((_a = componentsJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
+                // if source already registered, avoid continue
+                if ((_b = this.settings.$components) === null || _b === void 0 ? void 0 : _b.getLibraries()[name]) {
+                    continue;
+                }
+                // register new library
+                const newSource = (_c = this.settings.$components) === null || _c === void 0 ? void 0 : _c.registerLibraryFromSettings(sourceSettings);
+                // cloning the repo
+                const res = yield __childProcess.spawnSync(`git clone ${this.settings.url} ${this.settings.$components.libraryRootDir}/${this.name}`, [], {
+                    shell: true,
+                });
+                const output = (_e = (_d = res.output) === null || _d === void 0 ? void 0 : _d.toString()) !== null && _e !== void 0 ? _e : '';
+                this.updated = !output.match(/already exists/);
+                if (output.includes('already exists')) {
+                    // try to pull the repo
+                    const pullRes = yield __childProcess.spawnSync(`git pull`, [], {
+                        cwd: `${this.settings.$components.libraryRootDir}/${this.name}`,
+                        shell: true,
+                    });
+                    const pullOutput = (_g = (_f = pullRes.output) === null || _f === void 0 ? void 0 : _f.toString().split(',').join('')) !== null && _g !== void 0 ? _g : '';
+                    this.updated = !pullOutput.match(/Already up to date/);
+                }
+                // updating new source
+                yield (newSource === null || newSource === void 0 ? void 0 : newSource.update());
+            }
+            return {
+                updated: this.updated,
+            };
+        });
+    }
 }
-//# sourceMappingURL=ComponentsPackage.js.map
+//# sourceMappingURL=ComponentsLibrary.js.map

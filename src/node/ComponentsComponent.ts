@@ -1,38 +1,52 @@
 import type {
   IComponentsComponentJson,
   IComponentsComponentSettings,
-  IComponentsDependencies,
-  IComponentsDependency,
-  IComponentsPackageSettings,
 } from './Components.types.js';
 
-import { __addPackageDependencies } from '@lotsof/sugar/package';
+import __ComponentsDependency from './ComponentsDependency.js';
 
-import __ComponentsPackage from './ComponentsPackage.js';
+import __ComponentsLibrary from './ComponentsLibrary.js';
 
-import { __copySync, __readJsonSync } from '@lotsof/sugar/fs';
+import { globSync as __globSync } from 'glob';
+
+import __fs from 'fs';
+
+import { __copySync, __readJsonSync, __renameSync } from '@lotsof/sugar/fs';
+import {
+  __capitalCase,
+  __constantCase,
+  __dashCase,
+  __dotCase,
+  __kebabCase,
+  __pascalCase,
+  __snakeCase,
+  __trainCase,
+} from '@lotsof/sugar/string';
+import __camelCase from '../../../sugar/dist/shared/string/camelize.js';
 
 export default class ComponentsComponent {
   private _settings: IComponentsComponentSettings;
   private _componentJson: IComponentsComponentJson;
-  private _package: __ComponentsPackage;
+  private _library: __ComponentsLibrary;
   private _rootDir: string;
-  private _dependencies: IComponentsDependencies = {};
+  private _newName?: string;
+  private _dependencies: Record<string, __ComponentsDependency> = {};
+  private _originalName: string;
 
   public get settings(): IComponentsComponentSettings {
     return this._settings;
   }
 
   public get name(): string {
-    return this._componentJson.name;
+    return this._newName ?? this._componentJson.name;
   }
 
   public get description(): string {
     return this._componentJson.description ?? this.name;
   }
 
-  public get package(): __ComponentsPackage {
-    return this._package;
+  public get library(): __ComponentsLibrary {
+    return this._library;
   }
 
   public get componentJson(): IComponentsComponentJson {
@@ -47,25 +61,89 @@ export default class ComponentsComponent {
     return this._componentJson.version;
   }
 
-  public get dependencies(): IComponentsDependencies {
+  public get dependencies(): Record<string, __ComponentsDependency> {
     return this._dependencies;
   }
 
   constructor(
     rootDir: string,
-    pkg: __ComponentsPackage,
-    settings: IComponentsPackageSettings,
+    pkg: __ComponentsLibrary,
+    settings: IComponentsComponentSettings,
   ) {
     this._settings = settings;
-    this._package = pkg;
+    this._library = pkg;
     this._rootDir = rootDir;
     this._componentJson = __readJsonSync(`${this.rootDir}/component.json`);
+
+    this._originalName = this.componentJson.name;
 
     this._addDependencies();
   }
 
+  public async renameFilesAndContents(): Promise<void> {
+    // list all the files in the component
+    const filesPaths = __globSync(`**/*`, {
+      cwd: this.rootDir,
+    });
+
+    for (let relFilePath of filesPaths) {
+      const filePath = `${this.rootDir}/${relFilePath}`;
+
+      // read the file content
+      let content = __fs.readFileSync(filePath, 'utf8');
+
+      // replace the component name in the file content
+      content = content.replaceAll(
+        __camelCase(this._originalName),
+        __camelCase(this.name),
+      );
+      content = content.replaceAll(
+        __dashCase(this._originalName),
+        __dashCase(this.name),
+      );
+      content = content.replaceAll(
+        __capitalCase(this._originalName),
+        __capitalCase(this.name),
+      );
+      content = content.replaceAll(
+        __constantCase(this._originalName),
+        __constantCase(this.name),
+      );
+      content = content.replaceAll(
+        __dotCase(this._originalName),
+        __dotCase(this.name),
+      );
+      content = content.replaceAll(
+        __kebabCase(this._originalName),
+        __kebabCase(this.name),
+      );
+      content = content.replaceAll(
+        __snakeCase(this._originalName),
+        __snakeCase(this.name),
+      );
+      content = content.replaceAll(
+        __trainCase(this._originalName),
+        __trainCase(this.name),
+      );
+      content = content.replaceAll(
+        __pascalCase(this._originalName),
+        __pascalCase(this.name),
+      );
+
+      // write the new file content
+      __fs.writeFileSync(filePath, content);
+
+      // rename the file
+      __renameSync(filePath, this.name);
+    }
+  }
+
   public setRootDir(rootDir: string): void {
     this._rootDir = rootDir;
+  }
+
+  public setNewName(name: string): void {
+    this._newName = name;
   }
 
   public copyToSync(destDir: string): void {
@@ -74,17 +152,17 @@ export default class ComponentsComponent {
   }
 
   private _addDependencies(): void {
-    console.log(this.componentJson);
-
     if (this.componentJson.dependencies) {
       for (let [name, dep] of Object.entries(
         this.componentJson.dependencies ?? {},
       )) {
-        this.addDependency(name, {
-          name,
+        const dependency = new __ComponentsDependency({
           type: 'component',
+          level: 'component',
+          name,
           version: dep,
         });
+        this.addDependency(dependency);
       }
     }
 
@@ -95,11 +173,13 @@ export default class ComponentsComponent {
     };
     if (Object.keys(npmDependencies).length) {
       for (let [name, dep] of Object.entries(npmDependencies)) {
-        this.addDependency(name, {
-          name,
+        const dependency = new __ComponentsDependency({
           type: 'npm',
+          level: 'component',
+          name,
           version: dep,
         });
+        this.addDependency(dependency);
       }
     }
 
@@ -109,90 +189,54 @@ export default class ComponentsComponent {
     };
     if (Object.keys(composerDependencies).length) {
       for (let [name, dep] of Object.entries(composerDependencies)) {
-        this.addDependency(name, {
-          name,
+        const dependency = new __ComponentsDependency({
           type: 'composer',
+          level: 'component',
+          name,
           version: dep,
         });
+        this.addDependency(dependency);
       }
     }
   }
 
   public hasDependencies(): boolean {
-    console.log(this._dependencies);
     return Object.keys(this._dependencies).length > 0;
   }
 
-  public addDependency(name: string, dependency: IComponentsDependency): void {
-    switch (dependency.type) {
-      case 'component':
-      case 'npm':
-      case 'composer':
-        this._dependencies[name] = dependency;
-        break;
-      default:
-        throw new Error(
-          `Unknown dependency type "${dependency.type}" for dependency "${name}"`,
-        );
-        break;
-    }
+  public addDependency(dependency: __ComponentsDependency): void {
+    this._dependencies[dependency.name] = dependency;
   }
 
   async installDependencies(
     type: 'npm' | 'composer' | ('npm' | 'composer')[] = ['npm', 'composer'],
-  ): Promise<void> {
+  ): Promise<__ComponentsDependency[]> {
+    let installedDependencies: __ComponentsDependency[] = [];
+
     if (Array.isArray(type) && !type.length) {
-      return;
+      return [];
     }
     if (Array.isArray(type)) {
       for (let t of type) {
-        await this.installDependencies(t);
+        const dep = await this.installDependencies(t);
+        installedDependencies = {
+          ...installedDependencies,
+          ...dep,
+        };
       }
-      return;
+      return installedDependencies;
     }
 
     return new Promise(async (resolve, reject) => {
-      switch (type) {
-        case 'npm':
-          if (this.componentJson.packageJson?.dependencies) {
-            console.log(
-              `Adding and install dependencies for ${this.name} component...`,
-            );
-            await __addPackageDependencies(
-              this.componentJson.packageJson.dependencies,
-              {
-                install: true,
-              },
-            );
-          }
-
-          if (this.componentJson.packageJson?.devDependencies) {
-            console.log(
-              `Adding and install devDependencies for ${this.name} component...`,
-            );
-            await __addPackageDependencies(
-              this.componentJson.packageJson.devDependencies,
-              {
-                install: true,
-              },
-            );
-          }
-
-          if (this.componentJson.packageJson?.globalDependencies) {
-            console.log(
-              `Adding and install globalDependencies for ${this.name} component...`,
-            );
-            await __addPackageDependencies(
-              this.componentJson.packageJson.globalDependencies,
-              {
-                install: true,
-              },
-            );
-          }
-          break;
+      for (let [name, dep] of Object.entries(this.dependencies)) {
+        if (type !== dep.type) {
+          continue;
+        }
+        await dep.install();
+        installedDependencies.push(dep);
       }
 
-      resolve();
+      resolve(installedDependencies);
     });
   }
 }

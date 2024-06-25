@@ -1,18 +1,17 @@
 import './Components.config.js';
-import { IComponentsAddComponentOptions, IComponentsAddComponentResult, IComponentsSettings, IComponentsSourceSettings, IComponentsSourcesUpdateResult } from './Components.types.js';
-import __ComponentSource from './ComponentsSource.js';
-import ComponentPackage from './ComponentsPackage.js';
-import { __ComponentsComponent } from './_exports.js';
+import { IComponentsAddComponentOptions, IComponentsAddComponentResult, IComponentsLibrariesUpdateResult, IComponentsLibrarySettings, IComponentsSettings } from './Components.types.js';
+import __ComponentLibrary from './ComponentsLibrary.js';
+import { __ComponentsComponent, __ComponentsLibrary } from './_exports.js';
 export default class Components {
-    private _sources;
+    private _libraries;
     settings: IComponentsSettings;
     get libraryRootDir(): string;
     constructor(settings?: IComponentsSettings);
-    registerSourceFromSettings(settings: IComponentsSourceSettings): __ComponentSource | undefined;
-    registerSource(source: __ComponentSource): __ComponentSource;
-    getSources(): Record<string, __ComponentSource>;
-    updateSources(): Promise<IComponentsSourcesUpdateResult>;
-    getPackages(sourceIds?: string[]): Record<string, ComponentPackage>;
+    registerLibraryFromSettings(settings: IComponentsLibrarySettings): __ComponentsLibrary;
+    registerLibrary(library: __ComponentsLibrary): __ComponentsLibrary;
+    get libraries(): Record<string, __ComponentsLibrary>;
+    updateLibraries(): Promise<IComponentsLibrariesUpdateResult>;
+    getLibraries(librariesNames?: string[]): Record<string, __ComponentLibrary>;
     getComponents(sourceIds?: string[]): Record<string, __ComponentsComponent>;
     addComponent(componentId: string, options?: IComponentsAddComponentOptions, isDependency?: boolean): Promise<IComponentsAddComponentResult | undefined>;
 }

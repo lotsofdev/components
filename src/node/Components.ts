@@ -6,16 +6,13 @@ import { __getConfig } from '@lotsof/config';
 import './Components.config.js';
 
 import {
-  IComponentGitSourceSettings,
   IComponentsAddComponentOptions,
   IComponentsAddComponentResult,
   IComponentsComponentJson,
+  IComponentsLibrariesUpdateResult,
+  IComponentsLibrarySettings,
   IComponentsSettings,
-  IComponentsSourceSettings,
-  IComponentsSourcesUpdateResult,
 } from './Components.types.js';
-import __ComponentSource from './ComponentsSource.js';
-import __ComponentGitSource from './sources/ComponentsGitSource.js';
 
 import { __packageRootDir } from '@lotsof/sugar/package';
 
@@ -24,17 +21,16 @@ import {
   __ensureDirSync,
   __existsSync,
   __readJsonSync,
-  __removeSync,
 } from '@lotsof/sugar/fs';
 
 import __path from 'path';
 
 import { globSync as __globSync } from 'glob';
-import ComponentPackage from './ComponentsPackage.js';
-import { __ComponentsComponent } from './_exports.js';
+import __ComponentLibrary from './ComponentsLibrary.js';
+import { __ComponentsComponent, __ComponentsLibrary } from './_exports.js';
 
 export default class Components {
-  private _sources: Record<string, __ComponentSource> = {};
+  private _libraries: Record<string, __ComponentsLibrary> = {};
   public settings: IComponentsSettings;
 
   public get libraryRootDir(): string {
@@ -48,51 +44,43 @@ export default class Components {
     };
   }
 
-  public registerSourceFromSettings(
-    settings: IComponentsSourceSettings,
-  ): __ComponentSource | undefined {
-    let source: __ComponentGitSource;
+  public registerLibraryFromSettings(
+    settings: IComponentsLibrarySettings,
+  ): __ComponentsLibrary {
     settings.$components = this;
-    switch (settings.type) {
-      case 'git':
-        source = new __ComponentGitSource(
-          <IComponentGitSourceSettings>settings,
-        );
-        break;
-    }
 
-    // @ts-ignore
-    if (!source) {
-      return;
-    }
-    return this.registerSource(source);
+    const library = new __ComponentsLibrary(
+      `${this.libraryRootDir}/${settings.name}`,
+      <IComponentsLibrarySettings>settings,
+    );
+
+    return this.registerLibrary(library);
   }
 
-  public registerSource(source: __ComponentSource): __ComponentSource {
-    this._sources[source.id] = source;
-    return this._sources[source.id];
+  public registerLibrary(library: __ComponentsLibrary): __ComponentsLibrary {
+    this._libraries[library.name] = library;
+    return this._libraries[library.name];
   }
 
-  public getSources(): Record<string, __ComponentSource> {
-    return this._sources;
+  public get libraries(): Record<string, __ComponentsLibrary> {
+    return this._libraries;
   }
 
-  public async updateSources(): Promise<IComponentsSourcesUpdateResult> {
-    // updating sources
-
-    const sources = this.getSources();
-
-    for (let [sourceId, source] of Object.entries(sources)) {
-      await source.update();
+  public async updateLibraries(): Promise<IComponentsLibrariesUpdateResult> {
+    // updating libraries
+    const libraries = this.getLibraries();
+    for (let [libraryName, library] of Object.entries(libraries)) {
+      await library.update();
     }
-
     return {
-      sources: this.getSources(),
+      libraries,
     };
   }
 
-  public getPackages(sourceIds?: string[]): Record<string, ComponentPackage> {
-    const packages: Record<string, ComponentPackage> = {};
+  public getLibraries(
+    librariesNames?: string[],
+  ): Record<string, __ComponentLibrary> {
+    const libraries: Record<string, __ComponentLibrary> = {};
 
     // list components in the root folder
     const componentsJsonFiles = __globSync([
@@ -101,13 +89,13 @@ export default class Components {
     ]);
 
     for (let [i, jsonPath] of componentsJsonFiles.entries()) {
-      const p = new ComponentPackage(__path.dirname(jsonPath), {
+      const p = new __ComponentLibrary(__path.dirname(jsonPath), {
         $components: this,
       });
-      packages[p.name] = p;
+      libraries[p.name] = p;
     }
 
-    return packages;
+    return libraries;
   }
 
   public getComponents(
@@ -115,9 +103,9 @@ export default class Components {
   ): Record<string, __ComponentsComponent> {
     let componentsList: Record<string, __ComponentsComponent> = {};
 
-    const packages = this.getPackages(sourceIds);
+    const libraries = this.getLibraries(sourceIds);
 
-    for (let [packageName, p] of Object.entries(packages)) {
+    for (let [libraryName, p] of Object.entries(libraries)) {
       const components = p.getComponents();
       componentsList = {
         ...componentsList,
@@ -136,7 +124,6 @@ export default class Components {
     options = {
       dir: `${__packageRootDir()}/src/components`,
       y: false,
-      override: false,
       ...(options ?? {}),
     };
 
@@ -148,19 +135,17 @@ export default class Components {
       return;
     }
 
-    let component = components[componentId],
-      addedComponents: __ComponentsComponent[] = [component],
-      finalComponentName = component.name,
-      componentDestinationDir = `${options.dir}/${component.name}`;
+    // get the component from the components list
+    let component = components[componentId];
 
-    // override
-    if (options.override && !isDependency) {
-      console.log(
-        `<red>Overriding</red> the component "<yellow>${component.name}</yellow>"...`,
-      );
-      // delete the existing component
-      __removeSync(componentDestinationDir);
+    // handle component name option
+    if (options.name) {
+      component.setNewName(options.name);
     }
+
+    // handle component destination directory
+    let addedComponents: __ComponentsComponent[] = [component],
+      componentDestinationDir = `${options.dir}/${component.name}`;
 
     // check if already exists
     if (__existsSync(`${componentDestinationDir}`)) {
@@ -173,21 +158,36 @@ export default class Components {
         };
       }
 
+      let proposedName = component.name,
+        proposedNameI = 0;
+      while (__existsSync(`${options.dir}/${proposedName}`)) {
+        proposedNameI++;
+        proposedName = `${component.name}${proposedNameI}`;
+      }
+
       // otherwise, ask for a new name
-      const newNameResponse = await __inquier.prompt({
-        type: 'input',
-        name: 'newName',
-        default: `${finalComponentName}1`,
-        message: `The component "${finalComponentName}" already exists. Specify a new name for your component`,
-      });
-      if (newNameResponse.newName) {
-        finalComponentName = newNameResponse.newName;
-        componentDestinationDir = `${options.dir}/${finalComponentName}`;
+      if (!options.y) {
+        const newNameResponse = await __inquier.prompt({
+          type: 'input',
+          name: 'newName',
+          default: proposedName,
+          message: `The component "${component.name}${
+            proposedNameI - 1
+          }" already exists. Specify a new name for your component`,
+        });
+        if (newNameResponse.newName) {
+          component.setNewName(newNameResponse.newName);
+        }
+      } else {
+        component.setNewName(proposedName);
       }
     }
 
     // ensure the directory exists
     __ensureDirSync(options.dir);
+
+    // copy the component to the specified directory
+    componentDestinationDir = `${options.dir}/${component.name}`;
 
     // read the component.json file
     const componentJson: IComponentsComponentJson = __readJsonSync(
@@ -220,16 +220,25 @@ export default class Components {
       )) {
         switch (subset.type) {
           case 'list':
-            answer = await __inquier.prompt({
-              type: 'list',
-              default:
-                subsetCategory === 'engine'
-                  ? this.settings.defaults.engine
-                  : null,
-              name: subsetCategory,
-              message: subset.question,
-              choices: subset.choices,
-            });
+            if (!options.y) {
+              answer = await __inquier.prompt({
+                type: 'list',
+                default:
+                  subsetCategory === 'engine'
+                    ? this.settings.defaults.engine
+                    : null,
+                name: subsetCategory,
+                message: subset.question,
+                choices: subset.choices,
+              });
+            } else {
+              answer = {
+                [subsetCategory]:
+                  subsetCategory === 'engine'
+                    ? this.settings.defaults.engine
+                    : null,
+              };
+            }
             break;
         }
 
@@ -280,14 +289,20 @@ export default class Components {
 
     // handle added components dependencies
     for (let addedComponent of addedComponents) {
-      if (!addedComponent.hasDependencies()) {
-        continue;
-      }
+      console.log(' ');
       console.log(
-        `Installing dependencies for the "${addedComponent.name}" component...`,
+        `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
       );
+
+      // install library level dependencies
+      await addedComponent.library.installDependencies();
+
+      // install component level dependencies
       await addedComponent.installDependencies();
     }
+
+    // rename component if needed
+    await component.renameFilesAndContents();
 
     return {
       component,
