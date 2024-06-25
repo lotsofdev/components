@@ -1,24 +1,21 @@
-import __inquier from 'inquirer';
 import * as __glob from 'glob';
-import { __addPackageDependencies } from '@lotsof/sugar/package';
+import __inquier from 'inquirer';
 
 import { __getConfig } from '@lotsof/config';
 
 import './Components.config.js';
 
-import { __folderHashSync } from '@lotsof/sugar/fs';
-
 import {
-  IComponent,
   IComponentGitSourceSettings,
   IComponentsAddComponentOptions,
   IComponentsAddComponentResult,
+  IComponentsComponentJson,
   IComponentsSettings,
   IComponentsSourceSettings,
   IComponentsSourcesUpdateResult,
 } from './Components.types.js';
-import ComponentSource from './ComponentsSource.js';
-import ComponentGitSource from './sources/ComponentsGitSource.js';
+import __ComponentSource from './ComponentsSource.js';
+import __ComponentGitSource from './sources/ComponentsGitSource.js';
 
 import { __packageRootDir } from '@lotsof/sugar/package';
 
@@ -27,7 +24,6 @@ import {
   __ensureDirSync,
   __existsSync,
   __readJsonSync,
-  __writeJsonSync,
   __removeSync,
 } from '@lotsof/sugar/fs';
 
@@ -35,20 +31,17 @@ import __path from 'path';
 
 import { globSync as __globSync } from 'glob';
 import ComponentPackage from './ComponentsPackage.js';
+import { __ComponentsComponent } from './_exports.js';
 
 export default class Components {
-  private _sources: Record<string, ComponentSource> = {};
+  private _sources: Record<string, __ComponentSource> = {};
   public settings: IComponentsSettings;
-
-  // public get stateFilePath(): string {
-  //   return this.settings.stateFilePath ?? `$`;
-  // }
 
   public get libraryRootDir(): string {
     return this.settings.libraryRootDir;
   }
 
-  constructor(settings: IComponentsSettings) {
+  constructor(settings?: IComponentsSettings) {
     this.settings = {
       ...(__getConfig('components.settings') ?? {}),
       ...(settings ?? {}),
@@ -57,12 +50,14 @@ export default class Components {
 
   public registerSourceFromSettings(
     settings: IComponentsSourceSettings,
-  ): ComponentSource | undefined {
-    let source: ComponentGitSource;
+  ): __ComponentSource | undefined {
+    let source: __ComponentGitSource;
     settings.$components = this;
     switch (settings.type) {
       case 'git':
-        source = new ComponentGitSource(<IComponentGitSourceSettings>settings);
+        source = new __ComponentGitSource(
+          <IComponentGitSourceSettings>settings,
+        );
         break;
     }
 
@@ -73,12 +68,12 @@ export default class Components {
     return this.registerSource(source);
   }
 
-  public registerSource(source: ComponentSource): ComponentSource {
+  public registerSource(source: __ComponentSource): __ComponentSource {
     this._sources[source.id] = source;
     return this._sources[source.id];
   }
 
-  public getSources(): Record<string, ComponentSource> {
+  public getSources(): Record<string, __ComponentSource> {
     return this._sources;
   }
 
@@ -115,8 +110,10 @@ export default class Components {
     return packages;
   }
 
-  public getComponents(sourceIds?: string[]): Record<string, IComponent> {
-    let componentsList: Record<string, IComponent> = {};
+  public getComponents(
+    sourceIds?: string[],
+  ): Record<string, __ComponentsComponent> {
+    let componentsList: Record<string, __ComponentsComponent> = {};
 
     const packages = this.getPackages(sourceIds);
 
@@ -152,17 +149,9 @@ export default class Components {
     }
 
     let component = components[componentId],
+      addedComponents: __ComponentsComponent[] = [component],
       finalComponentName = component.name,
       componentDestinationDir = `${options.dir}/${component.name}`;
-
-    // read the components state file
-    // __ensureDirSync(__path.dirname(this.settings.stateFilePath));
-    // let componentsStates: IComponentsState = {
-    //   installedHashes: {},
-    // };
-    // if (__existsSync(this.settings.stateFilePath)) {
-    //   componentsStates = __readJsonSync(this.settings.stateFilePath);
-    // }
 
     // override
     if (options.override && !isDependency) {
@@ -177,7 +166,11 @@ export default class Components {
     if (__existsSync(`${componentDestinationDir}`)) {
       // if it's a dependency, we don't need to ask for a new name
       if (isDependency) {
-        return;
+        // set the new rootDir
+        component.setRootDir(componentDestinationDir);
+        return {
+          component,
+        };
       }
 
       // otherwise, ask for a new name
@@ -197,12 +190,14 @@ export default class Components {
     __ensureDirSync(options.dir);
 
     // read the component.json file
-    const componentJson = __readJsonSync(`${component.path}/component.json`);
+    const componentJson: IComponentsComponentJson = __readJsonSync(
+      `${component.rootDir}/component.json`,
+    );
 
     // copy the component to the specified directory
     if (!componentJson.subset) {
       // copy the entire component
-      __copySync(component.path, componentDestinationDir);
+      component.copyToSync(componentDestinationDir);
     } else {
       let answer: any,
         files: string[] = [],
@@ -211,9 +206,9 @@ export default class Components {
       // add the "files" to the copy map
       if (componentJson.files) {
         for (let file of componentJson.files) {
-          const resolvedFiles = __glob.sync(`${component.path}/${file}`);
+          const resolvedFiles = __glob.sync(`${component.rootDir}/${file}`);
           for (let resolvedFile of resolvedFiles) {
-            const relPath = resolvedFile.replace(`${component.path}/`, '');
+            const relPath = resolvedFile.replace(`${component.rootDir}/`, '');
             copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
           }
         }
@@ -247,9 +242,9 @@ export default class Components {
 
         // copy the files
         for (let file of files) {
-          const resolvedFiles = __glob.sync(`${component.path}/${file}`);
+          const resolvedFiles = __glob.sync(`${component.rootDir}/${file}`);
           for (let resolvedFile of resolvedFiles) {
-            const relPath = resolvedFile.replace(`${component.path}/`, '');
+            const relPath = resolvedFile.replace(`${component.rootDir}/`, '');
             copyMap[resolvedFile] = `${componentDestinationDir}/${relPath}`;
           }
         }
@@ -264,44 +259,34 @@ export default class Components {
       for (let [from, to] of Object.entries(copyMap)) {
         __copySync(from, to);
       }
+
+      // set the new rootDir
+      component.setRootDir(componentDestinationDir);
     }
 
-    // save the installed component hash
-    // const installedComponentHash = __folderHashSync(componentDestinationDir);
-    // componentsStates.installedHashes[component.name] = installedComponentHash;
-    // __writeJsonSync(this.settings.stateFilePath, componentsStates);
-
-    // handle dependencies
-    if (componentJson.dependencies) {
-      const dependencies: Record<string, IComponent> = {};
-      component.dependencies = dependencies;
-
-      for (let [dependencyId, version] of Object.entries(
-        componentJson.dependencies,
-      )) {
-        const dependendiesRes = await this.addComponent(
-          dependencyId,
-          options,
-          true,
-        );
-        if (dependendiesRes) {
-          component.dependencies[dependencyId] = dependendiesRes.component;
+    // handle components dependencies
+    if (component.dependencies) {
+      for (let [name, dep] of Object.entries(component.dependencies)) {
+        switch (dep.type) {
+          case 'component':
+            const res = await this.addComponent(name, options, true);
+            if (res) {
+              addedComponents.push(res.component);
+            }
+            break;
         }
       }
     }
 
-    // handle "packageJson" from package
-    if (component.package?.componentsJson?.packageJson) {
-      // adding npm dependencies
-      if (component.package.componentsJson.packageJson.dependencies) {
-        console.log('Adding npm dependencies and installing them...');
-        await __addPackageDependencies(
-          component.package.componentsJson.packageJson.dependencies,
-          {
-            install: true,
-          },
-        );
+    // handle added components dependencies
+    for (let addedComponent of addedComponents) {
+      if (!addedComponent.hasDependencies()) {
+        continue;
       }
+      console.log(
+        `Installing dependencies for the "${addedComponent.name}" component...`,
+      );
+      await addedComponent.installDependencies();
     }
 
     return {

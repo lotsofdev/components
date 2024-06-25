@@ -17,5 +17,15 @@
   },
   "dependencies": {
     "@lotsof/components/config": "^1.0.0"
+  },
+  "composerJson": {
+    "dependencies": {
+      "lotsof/types": "^1.0.0"
+    }
+  },
+  "packageJson": {
+    "dependencies": {
+      "@lotsof/types": "^1.0.0"
+    }
   }
 }

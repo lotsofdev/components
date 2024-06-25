@@ -1,44 +1,54 @@
 import { __existsSync } from '@lotsof/sugar/fs';
 import { globSync as __globSync } from 'glob';
 import { __readJsonSync } from '@lotsof/sugar/fs';
-export default class ComponentPackage {
+import __ComponentsComponent from './ComponentsComponent.js';
+export default class ComponentsPackage {
+    get settings() {
+        return this._settings;
+    }
+    get componentsJson() {
+        return this._componentsJson;
+    }
     get name() {
-        return this.componentsJson.name;
+        return this._componentsJson.name;
     }
     get description() {
         var _a;
-        return (_a = this.componentsJson.description) !== null && _a !== void 0 ? _a : this.name;
+        return (_a = this._componentsJson.description) !== null && _a !== void 0 ? _a : this.name;
     }
     get rootDir() {
         return this._rootDir;
     }
     get version() {
-        return this.componentsJson.version;
+        return this._componentsJson.version;
     }
     get dependencies() {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
         const dependencies = {};
         if (this.componentsJson.dependencies) {
             for (let [name, dep] of Object.entries(this.componentsJson.dependencies)) {
                 dependencies[name] = {
+                    name,
                     type: 'component',
                     version: dep,
                 };
             }
         }
-        const npmDependencies = Object.assign(Object.assign(Object.assign({}, ((_a = this.componentsJson.packageJson.dependencies) !== null && _a !== void 0 ? _a : {})), ((_b = this.componentsJson.packageJson.devDependencies) !== null && _b !== void 0 ? _b : {})), ((_c = this.componentsJson.packageJson.globalDependencies) !== null && _c !== void 0 ? _c : {}));
+        const npmDependencies = Object.assign(Object.assign(Object.assign({}, ((_b = (_a = this.componentsJson.packageJson) === null || _a === void 0 ? void 0 : _a.dependencies) !== null && _b !== void 0 ? _b : {})), ((_d = (_c = this.componentsJson.packageJson) === null || _c === void 0 ? void 0 : _c.devDependencies) !== null && _d !== void 0 ? _d : {})), ((_f = (_e = this.componentsJson.packageJson) === null || _e === void 0 ? void 0 : _e.globalDependencies) !== null && _f !== void 0 ? _f : {}));
         if (Object.keys(npmDependencies).length) {
             for (let [name, dep] of Object.entries(npmDependencies)) {
                 dependencies[name] = {
+                    name,
                     type: 'npm',
                     version: dep,
                 };
             }
         }
-        const composerDependencies = Object.assign(Object.assign({}, ((_d = this.componentsJson.composerJson.require) !== null && _d !== void 0 ? _d : {})), ((_e = this.componentsJson.composerJson['require-dev']) !== null && _e !== void 0 ? _e : {}));
+        const composerDependencies = Object.assign(Object.assign({}, ((_h = (_g = this.componentsJson.composerJson) === null || _g === void 0 ? void 0 : _g.require) !== null && _h !== void 0 ? _h : {})), ((_k = (_j = this.componentsJson.composerJson) === null || _j === void 0 ? void 0 : _j['require-dev']) !== null && _k !== void 0 ? _k : {}));
         if (Object.keys(composerDependencies).length) {
             for (let [name, dep] of Object.entries(composerDependencies)) {
                 dependencies[name] = {
+                    name,
                     type: 'composer',
                     version: dep,
                 };
@@ -47,10 +57,9 @@ export default class ComponentPackage {
         return dependencies;
     }
     constructor(rootDir, settings) {
-        this.settings = settings;
+        this._settings = settings;
         this._rootDir = rootDir;
-        // reading the "components.json" file
-        this.componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
+        this._componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
     }
     getComponents() {
         var _a;
@@ -72,11 +81,10 @@ export default class ComponentPackage {
                 if (!__existsSync(componentJsonPath)) {
                     continue;
                 }
-                const componentJson = __readJsonSync(componentJsonPath);
-                componentJson.package = this;
-                componentJson.path = `${this.rootDir}/${componentPath}`;
-                componentJson.relPath = componentPath;
-                componentsList[`${this.name}/${componentJson.name}`] = componentJson;
+                const component = new __ComponentsComponent(`${this.rootDir}/${componentPath}`, this, {
+                    $components: this.settings.$components,
+                });
+                componentsList[`${this.name}/${component.name}`] = component;
             }
         }
         return componentsList;

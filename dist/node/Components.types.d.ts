@@ -1,8 +1,18 @@
 import Components from './Components.js';
-import ComponentsPackage from './ComponentsPackage.js';
+import __ComponentsComents from './ComponentsComponent.js';
 import ComponentsSource from './ComponentsSource.js';
+import { __ComponentsComponent } from './_exports.js';
 export interface IComponentsState {
     installedHashes: Record<string, string>;
+}
+export interface IComponentsComposerJson {
+    require?: Record<string, string>;
+    'require-dev'?: Record<string, string>;
+}
+export interface IComponentsPackageJson {
+    dependencies?: Record<string, string>;
+    devDependencies?: Record<string, string>;
+    globalDependencies?: Record<string, string>;
 }
 export interface IComponentsConfig {
     settings: IComponentsSettings;
@@ -23,34 +33,41 @@ export interface IComponentsPackageJson {
     version: string;
     name: string;
     description?: string;
+    folders?: string[];
+    dependencies?: Record<string, string>;
+    composerJson?: IComponentsComposerJson;
+    packageJson?: IComponentsPackageJson;
+}
+export interface IComponentsComponentJson {
+    version: string;
+    name: string;
+    description?: string;
+    files?: string[];
+    subset?: IComponentsComponentJsonSubset;
+    dependencies?: Record<string, string>;
+    composerJson?: IComponentsComposerJson;
+    packageJson?: IComponentsPackageJson;
+}
+export interface IComponentsComponentSettings {
+    $components: Components;
 }
 export interface IComponentsPackageSettings {
     $components: Components;
 }
-export interface IComponentJsonSubset {
+export interface IComponentsComponentJsonSubset {
     type: 'list';
     question: string;
     choices: string[];
     files: Record<string, string | string[]>;
 }
-export interface IComponentJson {
-    version: string;
+export interface IComponentsDependency {
     name: string;
-    description?: string;
-    subset?: IComponentJsonSubset;
-    dependencies?: Record<string, string | IComponent>;
-}
-export interface IComponentsPackageDependency {
     type: 'npm' | 'composer' | 'component';
     version: string;
+    component?: __ComponentsComents;
 }
-export interface IComponentsPackageDependencies {
-    [key: string]: IComponentsPackageDependency;
-}
-export interface IComponent extends IComponentJson {
-    package: ComponentsPackage;
-    path: string;
-    relPath: string;
+export interface IComponentsDependencies {
+    [key: string]: IComponentsDependency;
 }
 export interface IComponentsSettings {
     libraryRootDir: string;
@@ -69,5 +86,5 @@ export interface IComponentsAddComponentOptions {
     engine?: string;
 }
 export interface IComponentsAddComponentResult {
-    component: IComponent;
+    component: __ComponentsComponent;
 }
