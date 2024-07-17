@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "name": "headerBanner",
-  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo",
+  "description": "Simple header banner component",
   "files": ["*"],
   "dependencies": {}
 }

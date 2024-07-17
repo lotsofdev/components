@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "name": "config",
-  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo",
+  "description": "Config proxy component",
   "files": ["*.php"],
   "dependencies": {
     "@lotsof/components/config": "^1.0.0"
