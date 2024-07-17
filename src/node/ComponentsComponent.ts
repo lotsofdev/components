@@ -93,38 +93,47 @@ export default class ComponentsComponent {
       let content = __fs.readFileSync(filePath, 'utf8');
 
       // replace the component name in the file content
+      // @ts-ignore
       content = content.replaceAll(
         __camelCase(this._originalName),
         __camelCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __dashCase(this._originalName),
         __dashCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __capitalCase(this._originalName),
         __capitalCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __constantCase(this._originalName),
         __constantCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __dotCase(this._originalName),
         __dotCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __kebabCase(this._originalName),
         __kebabCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __snakeCase(this._originalName),
         __snakeCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __trainCase(this._originalName),
         __trainCase(this.name),
       );
+      // @ts-ignore
       content = content.replaceAll(
         __pascalCase(this._originalName),
         __pascalCase(this.name),
@@ -142,7 +151,7 @@ export default class ComponentsComponent {
     this._rootDir = rootDir;
   }
 
-  public setNewName(name: string): void {
+  public setName(name: string): void {
     this._newName = name;
   }
 
@@ -208,7 +217,7 @@ export default class ComponentsComponent {
     this._dependencies[dependency.name] = dependency;
   }
 
-  async installDependencies(
+  public async installDependencies(
     type: 'npm' | 'composer' | ('npm' | 'composer')[] = ['npm', 'composer'],
   ): Promise<__ComponentsDependency[]> {
     let installedDependencies: __ComponentsDependency[] = [];

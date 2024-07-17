@@ -89,7 +89,10 @@ export default class Components {
     ]);
 
     for (let [i, jsonPath] of componentsJsonFiles.entries()) {
+      const componentsJson = __readJsonSync(jsonPath);
+
       const p = new __ComponentLibrary(__path.dirname(jsonPath), {
+        name: componentsJson.name,
         $components: this,
       });
       libraries[p.name] = p;
@@ -140,7 +143,7 @@ export default class Components {
 
     // handle component name option
     if (options.name) {
-      component.setNewName(options.name);
+      component.setName(options.name);
     }
 
     // handle component destination directory
@@ -176,10 +179,10 @@ export default class Components {
           }" already exists. Specify a new name for your component`,
         });
         if (newNameResponse.newName) {
-          component.setNewName(newNameResponse.newName);
+          component.setName(newNameResponse.newName);
         }
       } else {
-        component.setNewName(proposedName);
+        component.setName(proposedName);
       }
     }
 

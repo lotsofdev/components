@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "lotsof/blade",
+  "description": "Simple blade engine component",
+  "files": ["blade.php", ".gitignore", "cache/.gitkeep"],
+  "composerJson": {
+    "require": {
+      "eftec/bladeone": "^4.13"
+    }
+  }
+}

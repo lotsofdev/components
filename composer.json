@@ -1,0 +1,19 @@
+{
+  "name": "lotsof/components",
+  "description": "Lotsof components",
+  "type": "project",
+  "repositories": [
+    {
+      "type": "path",
+      "url": "../types"
+    },
+    {
+      "type": "path",
+      "url": "../sugar"
+    }
+  ],
+  "require": {
+    "lotsof/types": "^1.0",
+    "eftec/bladeone": "^4.13"
+  }
+}

@@ -1,9 +1,10 @@
 {
-  "exclude": ["lotsof.config.ts", "./dist/**/*"],
+  "exclude": ["./dist/**/*"],
   "compilerOptions": {
     "noImplicitAny": false,
-    "rootDir": "src/node",
-    "outDir": "dist/node",
+    "jsx": "react",
+    "rootDir": "src",
+    "outDir": "dist",
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",

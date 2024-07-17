@@ -58,7 +58,9 @@ export default class Components {
             `${this.libraryRootDir}/*/*/components.json`,
         ]);
         for (let [i, jsonPath] of componentsJsonFiles.entries()) {
+            const componentsJson = __readJsonSync(jsonPath);
             const p = new __ComponentLibrary(__path.dirname(jsonPath), {
+                name: componentsJson.name,
                 $components: this,
             });
             libraries[p.name] = p;
@@ -87,7 +89,7 @@ export default class Components {
             let component = components[componentId];
             // handle component name option
             if (options.name) {
-                component.setNewName(options.name);
+                component.setName(options.name);
             }
             // handle component destination directory
             let addedComponents = [component], componentDestinationDir = `${options.dir}/${component.name}`;
@@ -115,11 +117,11 @@ export default class Components {
                         message: `The component "${component.name}${proposedNameI - 1}" already exists. Specify a new name for your component`,
                     });
                     if (newNameResponse.newName) {
-                        component.setNewName(newNameResponse.newName);
+                        component.setName(newNameResponse.newName);
                     }
                 }
                 else {
-                    component.setNewName(proposedName);
+                    component.setName(proposedName);
                 }
             }
             // ensure the directory exists

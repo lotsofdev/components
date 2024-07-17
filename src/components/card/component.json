@@ -1,21 +1,11 @@
 {
   "version": "1.0.0",
-  "name": "card",
-  "description": "Simple but extensible card component",
-  "files": ["card.css"],
-  "subset": {
-    "engine": {
-      "question": "Which engine do you use?",
-      "type": "list",
-      "choices": ["twig", "blade", "html"],
-      "files": {
-        "twig": "*.twig",
-        "blade": "*.blade.php",
-        "html": "*.html"
-      }
+  "name": "lotsof/card",
+  "description": "Simple card component",
+  "files": ["*.php"],
+  "composerJson": {
+    "require": {
+      "lotsof/types": "^1.0.0"
     }
-  },
-  "dependencies": {
-    "@lotsof/components/config": "^1.0.0"
   }
 }

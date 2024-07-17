@@ -1,4 +1,4 @@
-import type { IComponentsLibrariesUpdateResult, IComponentsLibraryJson, IComponentsLibrarySettings } from './Components.types.js';
+import type { IComponentsLibraryJson, IComponentsLibrarySettings, IComponentsLibraryUpdateResult } from './Components.types.js';
 import __ComponentsDependency from './ComponentsDependency.js';
 import __ComponentsComponent from './ComponentsComponent.js';
 export default class ComponentsLibrary {
@@ -20,5 +20,5 @@ export default class ComponentsLibrary {
     hasDependencies(): boolean;
     addDependency(dependency: __ComponentsDependency): void;
     installDependencies(type?: 'npm' | 'composer' | ('npm' | 'composer')[]): Promise<__ComponentsDependency[]>;
-    update(): Promise<IComponentsLibrariesUpdateResult>;
+    update(): Promise<IComponentsLibraryUpdateResult>;
 }

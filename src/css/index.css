@@ -1,0 +1,6 @@
+@import '../components/index.css';
+
+[class*='area-'] {
+  padding: s-space(20);
+  background: s-color(info, --alpha 0.3);
+}

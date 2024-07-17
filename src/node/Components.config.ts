@@ -1,7 +1,6 @@
 import type { IComponentsConfig } from '@lotsof/components';
 
 import { homedir as __homedir } from 'os';
-import { __packageRootDir } from '@lotsof/sugar/package';
 
 import { __defineConfig } from '@lotsof/config';
 

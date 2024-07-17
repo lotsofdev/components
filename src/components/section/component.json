@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "name": "lotsof/section",
+  "description": "Simple section component",
+  "files": ["*.php"],
+  "composerJson": {
+    "require": {
+      "lotsof/types": "^1.0.0"
+    }
+  }
+}

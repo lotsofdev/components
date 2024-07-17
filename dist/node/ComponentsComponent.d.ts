@@ -20,7 +20,7 @@ export default class ComponentsComponent {
     constructor(rootDir: string, pkg: __ComponentsLibrary, settings: IComponentsComponentSettings);
     renameFilesAndContents(): Promise<void>;
     setRootDir(rootDir: string): void;
-    setNewName(name: string): void;
+    setName(name: string): void;
     copyToSync(destDir: string): void;
     private _addDependencies;
     hasDependencies(): boolean;

@@ -1,0 +1,197 @@
+.typo-h1,
+.typo-h2,
+.typo-h3,
+.typo-h4,
+.typo-h5,
+.typo-format h1,
+.typo-format h2,
+.typo-format h3,
+.typo-format h4,
+.typo-format h5,
+.typo-format h6 {
+  font: s-font(title);
+}
+
+.typo-rhythm {
+  display: flex;
+  flex-direction: column;
+  gap: s-space(30);
+}
+
+.typo-h1,
+.typo-format h1 {
+  font-size: s-size(100);
+
+  @media mobile {
+    font-size: s-size(60);
+  }
+}
+
+.typo-h2,
+.typo-format h2 {
+  font-size: s-size(50);
+
+  @media mobile {
+    font-size: s-size(45);
+  }
+}
+
+.typo-h3,
+.typo-format h3 {
+  font-size: s-size(40);
+
+  @media mobile {
+    font-size: s-size(35);
+  }
+}
+
+.typo-h4,
+.typo-format h4 {
+  font-size: s-size(30);
+
+  @media mobile {
+    font-size: s-size(25);
+  }
+}
+
+.typo-h5,
+.typo-format h5 {
+  font-size: s-size(20);
+
+  @media mobile {
+    font-size: s-size(20);
+  }
+}
+
+.typo-h6,
+.typo-format h6 {
+  font-size: s-size(10);
+
+  @media mobile {
+    font-size: s-size(10);
+  }
+}
+
+.typo-p,
+.typo-format p {
+  font: s-font(default);
+  letter-spacing: 0.05em;
+
+  &:empty {
+    display: none;
+  }
+}
+
+.typo-lead,
+.typo-lead > p,
+.typo-format .typo-lead,
+.typo-format .typo-lead p {
+  font: s-font(lead);
+
+  @media mobile {
+    font-size: s-size(25);
+    line-height: 28px;
+  }
+}
+
+.typo-code,
+.typo-format code {
+  font: s-font(code);
+  background: s-color(main, background);
+  padding: s-space(10) s-space(10);
+  border-radius: s-radius();
+  color: s-color(accent, --darken 10);
+}
+
+.typo-a,
+.typo-format a {
+  color: s-color(accent);
+  text-decoration: underline;
+}
+
+.typo-strong,
+.typo-format strong,
+.typo-b,
+.typo-format b {
+  font-weight: bold;
+}
+
+.typo-em,
+.typo-format em {
+  font-weight: normal;
+}
+
+.typo-u,
+.typo-format u {
+  text-decoration: underline;
+}
+
+.typo-sub,
+.typo-format sub {
+  position: relative;
+  top: 0.3em;
+}
+
+.typo-sup,
+.typo-format sup {
+  position: relative;
+  top: -0.5em;
+}
+
+.typo-small,
+.typo-format small {
+  font-size: 0.7em;
+}
+
+.typo-ul,
+.typo-format ul,
+.typo-ol,
+.typo-format ol {
+  > li {
+    position: relative;
+    padding-left: s-space(20);
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: s-color(accent);
+    }
+  }
+}
+.typo-ul,
+.typo-format ul {
+  > li {
+    &:before {
+      content: '•';
+    }
+  }
+}
+.typo-ol,
+.typo-format ol {
+  counter-reset: item;
+
+  > li {
+    padding-left: s-space(25);
+
+    &:before {
+      content: counter(item) '.';
+      counter-increment: item;
+    }
+  }
+}
+
+.typo-code,
+.typo-format code {
+}
+
+.typo-blockquote,
+.typo-format blockquote {
+  border-inline-start: 4px solid s-color(accent);
+  padding-block: s-space(10);
+  padding-inline-start: s-space(40);
+
+  @media mobile {
+    padding-inline-start: s-space(20);
+  }
+}

@@ -1,5 +1,10 @@
 {
   "version": "1.0.0",
   "name": "config",
-  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo"
+  "description": "owejfoiwejfoiwejf wefj oiwejfiowej fo",
+  "composerJson": {
+    "require": {
+      "lotsof/types": "^1.0.0"
+    }
+  }
 }

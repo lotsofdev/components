@@ -1,0 +1,26 @@
+.btn {
+  display: inline-block;
+  padding: s-space(10) s-space(20);
+  background: s-color(current);
+  border-radius: s-radius();
+  border: 1px solid s-color(current);
+  color: s-color(current, --lighten 50);
+  font-size: s-size(16);
+  cursor: pointer;
+  transition: s-transition(fast);
+
+  &:hover {
+    background: s-color(current, --lighten 20);
+    border: 1px solid s-color(current, --lighten 20);
+  }
+
+  &.-outline {
+    color: s-color(accent);
+    background: transparent;
+
+    &:hover {
+      background: s-color(accent, --alpha 0.1);
+      border: 1px solid s-color(current, --lighten 20);
+    }
+  }
+}

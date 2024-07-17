@@ -1,7 +1,7 @@
 import type {
-  IComponentsLibrariesUpdateResult,
   IComponentsLibraryJson,
   IComponentsLibrarySettings,
+  IComponentsLibraryUpdateResult,
 } from './Components.types.js';
 
 import __childProcess from 'child_process';
@@ -153,7 +153,7 @@ export default class ComponentsLibrary {
     this._dependencies[dependency.name] = dependency;
   }
 
-  async installDependencies(
+  public async installDependencies(
     type: 'npm' | 'composer' | ('npm' | 'composer')[] = ['npm', 'composer'],
   ): Promise<__ComponentsDependency[]> {
     let installedDependencies: __ComponentsDependency[] = [];
@@ -185,7 +185,7 @@ export default class ComponentsLibrary {
     });
   }
 
-  async update(): Promise<IComponentsLibrariesUpdateResult> {
+  async update(): Promise<IComponentsLibraryUpdateResult> {
     // get the components.json file from the updated component
     const componentsJson = __readJsonSync(
       `${this.settings.$components.libraryRootDir}/${this.name}/components.json`,

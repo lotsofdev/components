@@ -56,7 +56,7 @@ export interface IComponentsComponentSettings {
 
 export interface IComponentsLibrarySettings {
   name: string;
-  type: 'git';
+  type?: 'git';
   url?: string;
   $components: Components;
 }

@@ -7,11 +7,14 @@
     "engine": {
       "question": "Which engine do you use?",
       "type": "list",
-      "choices": ["twig", "blade", "html"],
+      "choices": ["twig", "blade"],
       "files": {
-        "twig": "*.twig",
-        "blade": "*.blade.php",
-        "html": "*.html"
+        "twig": {
+          "files": ["*.twig"]
+        },
+        "blade": {
+          "files": ["*.blade.php"]
+        }
       }
     }
   },
