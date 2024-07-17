@@ -52,7 +52,7 @@
   --s-spaces: 0 80px linear;
 
   --s-font-default: s-font-family(sans) 16px 1.6em;
-  --s-font-lead: s-font-family(sans) 26px 1.3em;
+  --s-font-lead: s-font-family(sans) 18px 1.3em;
   --s-font-title: s-font-family(sans) s-size(100) 1em;
   --s-font-code: s-font-family(code) 16px 1.6em;
 

@@ -18,7 +18,7 @@
                     {!! $areaBeforeBody !!}
                 </div>
             @endif
-            @include('body.body', (array) $body)
+            {!! $body->html !!}
             @if ($areaBody)
                 <div class="_area-body">
                     {!! $areaBody !!}

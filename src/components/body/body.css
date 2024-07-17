@@ -1,0 +1,6 @@
+.body {
+  ._buttons {
+    display: flex;
+    gap: s-space(20);
+  }
+}

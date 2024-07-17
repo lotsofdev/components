@@ -15,12 +15,12 @@
 .typo-rhythm {
   display: flex;
   flex-direction: column;
-  gap: s-space(30);
+  gap: s-space(20);
 }
 
 .typo-h1,
 .typo-format h1 {
-  font-size: s-size(100);
+  font-size: s-size(80);
 
   @media mobile {
     font-size: s-size(60);
@@ -87,6 +87,7 @@
 .typo-format .typo-lead,
 .typo-format .typo-lead p {
   font: s-font(lead);
+  font-weight: bold;
 
   @media mobile {
     font-size: s-size(25);
@@ -178,6 +179,18 @@
       content: counter(item) '.';
       counter-increment: item;
     }
+  }
+}
+
+.typo-dl,
+.typo-format dl {
+  > dt > dl dt,
+  > dd > dl dd {
+    position: relative;
+    padding-left: s-space(20);
+  }
+  > dt {
+    margin-top: s-space(20);
   }
 }
 

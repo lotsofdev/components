@@ -1,8 +1,10 @@
 @import './sugarcss/sugarcss.css';
 
+@import './body/body.css';
 @import './button/button.css';
 @import './card/card.css';
 @import './componentPreview/componentPreview.css';
+@import './headerBanner/headerBanner.css';
 @import './image/image.css';
 @import './layout/layout.css';
 @import './propertiesPreview/propertiesPreview.css';
