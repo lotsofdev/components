@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "name": "lotsof/card",
+  "name": "card",
   "description": "Simple card component",
-  "files": ["*.php"],
+  "files": ["*.php", "*.css"],
   "composerJson": {
     "require": {
       "lotsof/types": "^1.0.0"

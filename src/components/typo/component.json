@@ -1,8 +1,8 @@
 {
   "version": "1.0.0",
-  "name": "lotsof/typo",
+  "name": "typo",
   "description": "Typography component",
-  "files": ["*.php"],
+  "files": ["*.php", "*.css"],
   "composerJson": {
     "require": {
       "fakerphp/faker": "^1.23"

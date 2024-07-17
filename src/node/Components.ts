@@ -77,9 +77,7 @@ export default class Components {
     };
   }
 
-  public getLibraries(
-    librariesNames?: string[],
-  ): Record<string, __ComponentLibrary> {
+  public getLibraries(): Record<string, __ComponentLibrary> {
     const libraries: Record<string, __ComponentLibrary> = {};
 
     // list components in the root folder
@@ -90,8 +88,9 @@ export default class Components {
 
     for (let [i, jsonPath] of componentsJsonFiles.entries()) {
       const componentsJson = __readJsonSync(jsonPath);
-
       const p = new __ComponentLibrary(__path.dirname(jsonPath), {
+        type: componentsJson.type ?? 'git',
+        url: componentsJson.url,
         name: componentsJson.name,
         $components: this,
       });

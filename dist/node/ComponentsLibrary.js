@@ -143,22 +143,23 @@ export default class ComponentsLibrary {
     }
     update() {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a, _b, _c, _d, _e, _f, _g;
+            var _a, _b, _c, _d, _e, _f;
             // get the components.json file from the updated component
             const componentsJson = __readJsonSync(`${this.settings.$components.libraryRootDir}/${this.name}/components.json`);
             // check dependencies
             for (let [name, sourceSettings] of Object.entries((_a = componentsJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
                 // if source already registered, avoid continue
-                if ((_b = this.settings.$components) === null || _b === void 0 ? void 0 : _b.getLibraries()[name]) {
-                    continue;
+                const libraries = this.settings.$components.getLibraries();
+                let newSource = libraries[name];
+                if (!libraries[name]) {
+                    // register new library
+                    newSource = (_b = this.settings.$components) === null || _b === void 0 ? void 0 : _b.registerLibraryFromSettings(sourceSettings);
                 }
-                // register new library
-                const newSource = (_c = this.settings.$components) === null || _c === void 0 ? void 0 : _c.registerLibraryFromSettings(sourceSettings);
                 // cloning the repo
                 const res = yield __childProcess.spawnSync(`git clone ${this.settings.url} ${this.settings.$components.libraryRootDir}/${this.name}`, [], {
                     shell: true,
                 });
-                const output = (_e = (_d = res.output) === null || _d === void 0 ? void 0 : _d.toString()) !== null && _e !== void 0 ? _e : '';
+                const output = (_d = (_c = res.output) === null || _c === void 0 ? void 0 : _c.toString()) !== null && _d !== void 0 ? _d : '';
                 this.updated = !output.match(/already exists/);
                 if (output.includes('already exists')) {
                     // try to pull the repo
@@ -166,7 +167,7 @@ export default class ComponentsLibrary {
                         cwd: `${this.settings.$components.libraryRootDir}/${this.name}`,
                         shell: true,
                     });
-                    const pullOutput = (_g = (_f = pullRes.output) === null || _f === void 0 ? void 0 : _f.toString().split(',').join('')) !== null && _g !== void 0 ? _g : '';
+                    const pullOutput = (_f = (_e = pullRes.output) === null || _e === void 0 ? void 0 : _e.toString().split(',').join('')) !== null && _f !== void 0 ? _f : '';
                     this.updated = !pullOutput.match(/Already up to date/);
                 }
                 // updating new source

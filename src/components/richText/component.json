@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "lotsof/richText",
+  "name": "richText",
   "description": "Simple rich text component",
   "files": ["*.php"],
   "composerJson": {

@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "name": "lotsof/body",
+  "name": "body",
   "description": "Simple body (suptitle, titles, subtutle, lead, (rich)text and buttons) component",
   "files": ["*.php"],
   "subset": {

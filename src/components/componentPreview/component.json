@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "name": "section",
-  "description": "Simple section component",
+  "name": "componentPreview",
+  "description": "Component preview component",
   "files": ["*.php", "*.css"],
   "composerJson": {
     "require": {

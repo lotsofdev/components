@@ -2,7 +2,7 @@
   "version": "1.0.0",
   "name": "helloWorld",
   "description": "Simple hello world component to test the component system",
-  "files": ["helloWorld.css"],
+  "files": ["*.css"],
   "subset": {
     "engine": {
       "question": "Which engine do you use?",
@@ -18,9 +18,7 @@
       }
     }
   },
-  "dependencies": {
-    "@lotsof/components/config": "^1.0.0"
-  },
+  "dependencies": {},
   "composerJson": {
     "dependencies": {
       "lotsof/types": "^1.0.0"

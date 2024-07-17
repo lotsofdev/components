@@ -50,7 +50,8 @@ export default class Components {
             };
         });
     }
-    getLibraries(librariesNames) {
+    getLibraries() {
+        var _a;
         const libraries = {};
         // list components in the root folder
         const componentsJsonFiles = __globSync([
@@ -60,6 +61,8 @@ export default class Components {
         for (let [i, jsonPath] of componentsJsonFiles.entries()) {
             const componentsJson = __readJsonSync(jsonPath);
             const p = new __ComponentLibrary(__path.dirname(jsonPath), {
+                type: (_a = componentsJson.type) !== null && _a !== void 0 ? _a : 'git',
+                url: componentsJson.url,
                 name: componentsJson.name,
                 $components: this,
             });

@@ -196,14 +196,14 @@ export default class ComponentsLibrary {
       componentsJson.dependencies ?? {},
     )) {
       // if source already registered, avoid continue
-      if (this.settings.$components?.getLibraries()[name]) {
-        continue;
+      const libraries = this.settings.$components.getLibraries();
+      let newSource = libraries[name];
+      if (!libraries[name]) {
+        // register new library
+        newSource = this.settings.$components?.registerLibraryFromSettings(
+          <IComponentsLibrarySettings>sourceSettings,
+        );
       }
-
-      // register new library
-      const newSource = this.settings.$components?.registerLibraryFromSettings(
-        <IComponentsLibrarySettings>sourceSettings,
-      );
 
       // cloning the repo
       const res = await __childProcess.spawnSync(
