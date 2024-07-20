@@ -82,8 +82,8 @@ export default class Components {
 
     // list components in the root folder
     const componentsJsonFiles = __globSync([
-      `${this.libraryRootDir}/*/components.json`,
-      `${this.libraryRootDir}/*/*/components.json`,
+      `${this.libraryRootDir}/*/componentsLibrary.json`,
+      `${this.libraryRootDir}/*/*/componentsLibrary.json`,
     ]);
 
     for (let [i, jsonPath] of componentsJsonFiles.entries()) {

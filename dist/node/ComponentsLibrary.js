@@ -41,12 +41,12 @@ export default class ComponentsLibrary {
         this.updated = false;
         this._settings = settings;
         this._rootDir = rootDir;
-        this._componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
+        this._componentsJson = __readJsonSync(`${this.rootDir}/componentsLibrary.json`);
         this._addDependencies();
     }
     getComponents() {
         var _a;
-        // reading the "components.json" file
+        // reading the "componentsLibrary.json" file
         const componentsList = {};
         // check if we have the "components.folders" settings
         let folders = ['src/components/*'];
@@ -144,8 +144,8 @@ export default class ComponentsLibrary {
     update() {
         return __awaiter(this, void 0, void 0, function* () {
             var _a, _b, _c, _d, _e, _f;
-            // get the components.json file from the updated component
-            const componentsJson = __readJsonSync(`${this.settings.$components.libraryRootDir}/${this.name}/components.json`);
+            // get the componentsLibrary.json file from the updated component
+            const componentsJson = __readJsonSync(`${this.settings.$components.libraryRootDir}/${this.name}/componentsLibrary.json`);
             // check dependencies
             for (let [name, sourceSettings] of Object.entries((_a = componentsJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
                 // if source already registered, avoid continue

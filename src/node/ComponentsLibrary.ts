@@ -55,12 +55,14 @@ export default class ComponentsLibrary {
   constructor(rootDir: string, settings: IComponentsLibrarySettings) {
     this._settings = settings;
     this._rootDir = rootDir;
-    this._componentsJson = __readJsonSync(`${this.rootDir}/components.json`);
+    this._componentsJson = __readJsonSync(
+      `${this.rootDir}/componentsLibrary.json`,
+    );
     this._addDependencies();
   }
 
   getComponents(): Record<string, __ComponentsComponent> {
-    // reading the "components.json" file
+    // reading the "componentsLibrary.json" file
     const componentsList: Record<string, __ComponentsComponent> = {};
 
     // check if we have the "components.folders" settings
@@ -186,9 +188,9 @@ export default class ComponentsLibrary {
   }
 
   async update(): Promise<IComponentsLibraryUpdateResult> {
-    // get the components.json file from the updated component
+    // get the componentsLibrary.json file from the updated component
     const componentsJson = __readJsonSync(
-      `${this.settings.$components.libraryRootDir}/${this.name}/components.json`,
+      `${this.settings.$components.libraryRootDir}/${this.name}/componentsLibrary.json`,
     );
 
     // check dependencies

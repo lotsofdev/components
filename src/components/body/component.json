@@ -8,7 +8,7 @@
       "question": "Which engine do you use?",
       "type": "list",
       "choices": ["twig", "blade"],
-      "files": {
+      "component": {
         "twig": {
           "files": ["*.twig"]
         },

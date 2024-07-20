@@ -1,9 +1,6 @@
 import Components from './Components.js';
 import ComponentsLibrary from './ComponentsLibrary.js';
 import { __ComponentsComponent } from './_exports.js';
-export interface IComponentsState {
-    installedHashes: Record<string, string>;
-}
 export interface IComponentsComposerJson {
     require?: Record<string, string>;
     'require-dev'?: Record<string, string>;
@@ -31,15 +28,17 @@ export interface IComponentsLibraryJson {
     composerJson?: IComponentsComposerJson;
     packageJson?: IComponentsPackageJson;
 }
-export interface IComponentsComponentJson {
-    version: string;
-    name: string;
-    description?: string;
+export interface IComponentsComponentJsonExtendable {
     files?: string[];
-    subset?: IComponentsComponentJsonSubset;
     dependencies?: Record<string, string>;
     composerJson?: IComponentsComposerJson;
     packageJson?: IComponentsPackageJson;
+}
+export interface IComponentsComponentJson extends IComponentsComponentJsonExtendable {
+    version: string;
+    name: string;
+    description?: string;
+    subset?: Record<'engine', IComponentsComponentJsonSubset>;
 }
 export interface IComponentsComponentSettings {
     $components: Components;
@@ -54,7 +53,7 @@ export interface IComponentsComponentJsonSubset {
     type: 'list';
     question: string;
     choices: string[];
-    files: Record<string, string | string[]>;
+    component: IComponentsComponentJsonExtendable;
 }
 export interface IComponentsDependency {
     name: string;
