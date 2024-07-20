@@ -81,6 +81,7 @@ export default class Components {
     }
     addComponent(componentId_1, options_1) {
         return __awaiter(this, arguments, void 0, function* (componentId, options, isDependency = false) {
+            var _a;
             options = Object.assign({ dir: `${__packageRootDir()}/src/components`, y: false }, (options !== null && options !== void 0 ? options : {}));
             // get components list
             const components = yield this.getComponents();
@@ -176,9 +177,27 @@ export default class Components {
                     }
                     // handle answer
                     answer = answer[subsetCategory];
-                    files = subset.files[answer];
+                    const componentAnswer = subset.component[answer];
+                    // get the "files" from the componentAnswer
+                    // that contains all the files to copy
+                    files = (_a = componentAnswer.files) !== null && _a !== void 0 ? _a : [];
                     if (!Array.isArray(files)) {
                         files = [files];
+                    }
+                    // handle the "depencencies" from the componentAnswer
+                    if (componentAnswer.dependencies) {
+                        for (let [name, dep] of Object.entries(componentAnswer.dependencies)) {
+                        }
+                    }
+                    console.log(componentAnswer);
+                    // handle components dependencies on subset level
+                    if (componentAnswer.dependencies) {
+                        for (let [name, version] of Object.entries(componentAnswer.dependencies)) {
+                            const res = yield this.addComponent(name, options, true);
+                            if (res) {
+                                addedComponents.push(res.component);
+                            }
+                        }
                     }
                     // copy the files
                     for (let file of files) {
@@ -200,30 +219,29 @@ export default class Components {
                 // set the new rootDir
                 component.setRootDir(componentDestinationDir);
             }
-            // handle components dependencies
+            // handle components dependencies on root level
             if (component.dependencies) {
-                for (let [name, dep] of Object.entries(component.dependencies)) {
-                    switch (dep.type) {
-                        case 'component':
-                            const res = yield this.addComponent(name, options, true);
-                            if (res) {
-                                addedComponents.push(res.component);
-                            }
-                            break;
+                for (let [name, version] of Object.entries(component.dependencies)) {
+                    const res = yield this.addComponent(name, options, true);
+                    if (res) {
+                        addedComponents.push(res.component);
                     }
                 }
             }
-            // handle added components dependencies
-            for (let addedComponent of addedComponents) {
-                console.log(' ');
-                console.log(`▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`);
-                // install library level dependencies
-                yield addedComponent.library.installDependencies();
-                // install component level dependencies
-                yield addedComponent.installDependencies();
-            }
+            // // handle added components dependencies
+            // for (let addedComponent of addedComponents) {
+            //   console.log(' ');
+            //   console.log(
+            //     `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
+            //   );
+            //   // install library level dependencies
+            //   await addedComponent.library.installDependencies();
+            //   // install component level dependencies
+            //   await addedComponent.installDependencies();
+            // }
             // rename component if needed
             yield component.renameFilesAndContents();
+            console.log(addedComponents);
             return {
                 component,
             };

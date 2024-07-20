@@ -246,9 +246,35 @@ export default class Components {
 
         // handle answer
         answer = answer[subsetCategory];
-        files = subset.files[answer];
+        const componentAnswer = subset.component[answer];
+
+        // get the "files" from the componentAnswer
+        // that contains all the files to copy
+        files = componentAnswer.files ?? [];
         if (!Array.isArray(files)) {
           files = [files];
+        }
+
+        // handle the "depencencies" from the componentAnswer
+        if (componentAnswer.dependencies) {
+          for (let [name, dep] of Object.entries(
+            componentAnswer.dependencies,
+          )) {
+          }
+        }
+
+        console.log(componentAnswer);
+
+        // handle components dependencies on subset level
+        if (componentAnswer.dependencies) {
+          for (let [name, version] of Object.entries(
+            componentAnswer.dependencies,
+          )) {
+            const res = await this.addComponent(name, options, true);
+            if (res) {
+              addedComponents.push(res.component);
+            }
+          }
         }
 
         // copy the files
@@ -275,36 +301,34 @@ export default class Components {
       component.setRootDir(componentDestinationDir);
     }
 
-    // handle components dependencies
+    // handle components dependencies on root level
     if (component.dependencies) {
-      for (let [name, dep] of Object.entries(component.dependencies)) {
-        switch (dep.type) {
-          case 'component':
-            const res = await this.addComponent(name, options, true);
-            if (res) {
-              addedComponents.push(res.component);
-            }
-            break;
+      for (let [name, version] of Object.entries(component.dependencies)) {
+        const res = await this.addComponent(name, options, true);
+        if (res) {
+          addedComponents.push(res.component);
         }
       }
     }
 
-    // handle added components dependencies
-    for (let addedComponent of addedComponents) {
-      console.log(' ');
-      console.log(
-        `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
-      );
+    // // handle added components dependencies
+    // for (let addedComponent of addedComponents) {
+    //   console.log(' ');
+    //   console.log(
+    //     `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
+    //   );
 
-      // install library level dependencies
-      await addedComponent.library.installDependencies();
+    //   // install library level dependencies
+    //   await addedComponent.library.installDependencies();
 
-      // install component level dependencies
-      await addedComponent.installDependencies();
-    }
+    //   // install component level dependencies
+    //   await addedComponent.installDependencies();
+    // }
 
     // rename component if needed
     await component.renameFilesAndContents();
+
+    console.log(addedComponents);
 
     return {
       component,

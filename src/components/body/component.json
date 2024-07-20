@@ -13,7 +13,10 @@
           "files": ["*.twig"]
         },
         "blade": {
-          "files": ["*.blade.php"]
+          "files": ["*.blade.php"],
+          "dependencies": {
+            "@lotsof/components/blade": "^1.0.0"
+          }
         }
       }
     }
