@@ -16,6 +16,8 @@ import {
 
 import { __packageRootDir } from '@lotsof/sugar/package';
 
+import { __unique } from '@lotsof/sugar/array';
+
 import {
   __copySync,
   __ensureDirSync,
@@ -247,29 +249,50 @@ export default class Components {
         }
 
         // handle answer
-        answer = answer[subsetCategory];
-        const componentAnswer = subset.component[answer];
+        let finalAnswer: any = {};
 
-        // get the "files" from the componentAnswer
+        if (Array.isArray(answer[subsetCategory])) {
+          for (let a of answer[subsetCategory]) {
+            for (let [key, value] of Object.entries(subset.component[a])) {
+              if (Array.isArray(value)) {
+                finalAnswer[key] = __unique([
+                  ...(finalAnswer[key] ?? []),
+                  ...value,
+                ]);
+              } else if (typeof value === 'object') {
+                finalAnswer[key] = {
+                  ...finalAnswer[key],
+                  ...value,
+                };
+              } else {
+                finalAnswer[key] = value;
+              }
+            }
+          }
+        } else {
+          finalAnswer = answer[subsetCategory];
+        }
+
+        // get the "files" from the finalAnswer
         // that contains all the files to copy
-        files = componentAnswer.files ?? files;
+        files = finalAnswer.files ?? files;
         if (!Array.isArray(files)) {
           files = [files];
         }
 
         // handle components dependencies on subset level
-        if (componentAnswer.dependencies) {
-          component.extendsDependencies(componentAnswer.dependencies);
+        if (finalAnswer.dependencies) {
+          component.extendsDependencies(finalAnswer.dependencies);
         }
 
         // handle composerJson from subset
-        if (componentAnswer.composerJson) {
-          component.extendsComposerJson(componentAnswer.composerJson);
+        if (finalAnswer.composerJson) {
+          component.extendsComposerJson(finalAnswer.composerJson);
         }
 
         // handle packageJson from subset
-        if (componentAnswer.packageJson) {
-          component.extendsPackageJson(componentAnswer.packageJson);
+        if (finalAnswer.packageJson) {
+          component.extendsPackageJson(finalAnswer.packageJson);
         }
 
         // copy the files

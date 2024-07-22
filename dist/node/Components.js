@@ -12,6 +12,7 @@ import __inquier from 'inquirer';
 import { __getConfig } from '@lotsof/config';
 import './Components.config.js';
 import { __packageRootDir } from '@lotsof/sugar/package';
+import { __unique } from '@lotsof/sugar/array';
 import { __copySync, __ensureDirSync, __existsSync, __readJsonSync, } from '@lotsof/sugar/fs';
 import __path from 'path';
 import { globSync as __globSync } from 'glob';
@@ -81,7 +82,7 @@ export default class Components {
     }
     addComponent(componentId_1, options_1) {
         return __awaiter(this, arguments, void 0, function* (componentId, options, isDependency = false) {
-            var _a;
+            var _a, _b;
             options = Object.assign({ dir: `${__packageRootDir()}/src/components`, y: false }, (options !== null && options !== void 0 ? options : {}));
             // get components list
             const components = yield this.getComponents();
@@ -178,25 +179,45 @@ export default class Components {
                             break;
                     }
                     // handle answer
-                    answer = answer[subsetCategory];
-                    const componentAnswer = subset.component[answer];
-                    // get the "files" from the componentAnswer
+                    let finalAnswer = {};
+                    if (Array.isArray(answer[subsetCategory])) {
+                        for (let a of answer[subsetCategory]) {
+                            for (let [key, value] of Object.entries(subset.component[a])) {
+                                if (Array.isArray(value)) {
+                                    finalAnswer[key] = __unique([
+                                        ...((_a = finalAnswer[key]) !== null && _a !== void 0 ? _a : []),
+                                        ...value,
+                                    ]);
+                                }
+                                else if (typeof value === 'object') {
+                                    finalAnswer[key] = Object.assign(Object.assign({}, finalAnswer[key]), value);
+                                }
+                                else {
+                                    finalAnswer[key] = value;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        finalAnswer = answer[subsetCategory];
+                    }
+                    // get the "files" from the finalAnswer
                     // that contains all the files to copy
-                    files = (_a = componentAnswer.files) !== null && _a !== void 0 ? _a : files;
+                    files = (_b = finalAnswer.files) !== null && _b !== void 0 ? _b : files;
                     if (!Array.isArray(files)) {
                         files = [files];
                     }
                     // handle components dependencies on subset level
-                    if (componentAnswer.dependencies) {
-                        component.extendsDependencies(componentAnswer.dependencies);
+                    if (finalAnswer.dependencies) {
+                        component.extendsDependencies(finalAnswer.dependencies);
                     }
                     // handle composerJson from subset
-                    if (componentAnswer.composerJson) {
-                        component.extendsComposerJson(componentAnswer.composerJson);
+                    if (finalAnswer.composerJson) {
+                        component.extendsComposerJson(finalAnswer.composerJson);
                     }
                     // handle packageJson from subset
-                    if (componentAnswer.packageJson) {
-                        component.extendsPackageJson(componentAnswer.packageJson);
+                    if (finalAnswer.packageJson) {
+                        component.extendsPackageJson(finalAnswer.packageJson);
                     }
                     // copy the files
                     for (let file of files) {
