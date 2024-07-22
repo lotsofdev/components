@@ -10,7 +10,7 @@
       "choices": ["twig", "blade"],
       "component": {
         "twig": {
-          "files": ["*.twig", "*.php"]
+          "files": ["*.twig", "body.type.php", "body.preview.php"]
         },
         "blade": {
           "files": ["*.php"],
