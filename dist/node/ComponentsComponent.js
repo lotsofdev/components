@@ -10,7 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import __ComponentsDependency from './ComponentsDependency.js';
 import { globSync as __globSync } from 'glob';
 import __fs from 'fs';
+import __path from 'path';
 import { __copySync, __readJsonSync, __renameSync } from '@lotsof/sugar/fs';
+import { __deepMerge } from '@lotsof/sugar/object';
 import { __capitalCase, __constantCase, __dashCase, __dotCase, __kebabCase, __pascalCase, __snakeCase, __trainCase, } from '@lotsof/sugar/string';
 import __camelCase from '../../../sugar/dist/shared/string/camelize.js';
 export default class ComponentsComponent {
@@ -47,16 +49,22 @@ export default class ComponentsComponent {
         this._rootDir = rootDir;
         this._componentJson = __readJsonSync(`${this.rootDir}/component.json`);
         this._originalName = this.componentJson.name;
-        this._addDependencies();
+        this._updateDependencies();
     }
-    renameFilesAndContents() {
+    finalizeComponent() {
         return __awaiter(this, void 0, void 0, function* () {
             // list all the files in the component
             const filesPaths = __globSync(`**/*`, {
                 cwd: this.rootDir,
+                nodir: true,
             });
             for (let relFilePath of filesPaths) {
                 const filePath = `${this.rootDir}/${relFilePath}`;
+                // do not touch files that does not start with the component name
+                const nameReg = new RegExp(`^${this._originalName}`);
+                if (!__path.basename(filePath).match(nameReg)) {
+                    continue;
+                }
                 // read the file content
                 let content = __fs.readFileSync(filePath, 'utf8');
                 // replace the component name in the file content
@@ -95,8 +103,24 @@ export default class ComponentsComponent {
         __copySync(this.rootDir, destDir);
         this._rootDir = destDir;
     }
-    _addDependencies() {
+    extendsDependencies(dependencies) {
+        var _a;
+        this._componentJson.dependencies = __deepMerge((_a = this._componentJson.dependencies) !== null && _a !== void 0 ? _a : {}, dependencies !== null && dependencies !== void 0 ? dependencies : {});
+        this._updateDependencies();
+    }
+    extendsComposerJson(composerJson) {
+        var _a;
+        this._componentJson.composerJson = __deepMerge((_a = this._componentJson.composerJson) !== null && _a !== void 0 ? _a : {}, composerJson !== null && composerJson !== void 0 ? composerJson : {});
+        this._updateDependencies();
+    }
+    extendsPackageJson(packageJson) {
+        var _a;
+        this._componentJson.packageJson = __deepMerge((_a = this._componentJson.packageJson) !== null && _a !== void 0 ? _a : {}, packageJson !== null && packageJson !== void 0 ? packageJson : {});
+        this._updateDependencies();
+    }
+    _updateDependencies() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;
+        this._dependencies = {};
         if (this.componentJson.dependencies) {
             for (let [name, dep] of Object.entries((_a = this.componentJson.dependencies) !== null && _a !== void 0 ? _a : {})) {
                 const dependency = new __ComponentsDependency({

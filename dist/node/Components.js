@@ -105,6 +105,7 @@ export default class Components {
                     component.setRootDir(componentDestinationDir);
                     return {
                         component,
+                        addedComponents,
                     };
                 }
                 let proposedName = component.name, proposedNameI = 0;
@@ -155,9 +156,10 @@ export default class Components {
                 for (let [subsetCategory, subset] of Object.entries(componentJson.subset)) {
                     switch (subset.type) {
                         case 'list':
+                        case 'checkbox':
                             if (!options.y) {
                                 answer = yield __inquier.prompt({
-                                    type: 'list',
+                                    type: subset.type,
                                     default: subsetCategory === 'engine'
                                         ? this.settings.defaults.engine
                                         : null,
@@ -180,24 +182,21 @@ export default class Components {
                     const componentAnswer = subset.component[answer];
                     // get the "files" from the componentAnswer
                     // that contains all the files to copy
-                    files = (_a = componentAnswer.files) !== null && _a !== void 0 ? _a : [];
+                    files = (_a = componentAnswer.files) !== null && _a !== void 0 ? _a : files;
                     if (!Array.isArray(files)) {
                         files = [files];
                     }
-                    // handle the "depencencies" from the componentAnswer
-                    if (componentAnswer.dependencies) {
-                        for (let [name, dep] of Object.entries(componentAnswer.dependencies)) {
-                        }
-                    }
-                    console.log(componentAnswer);
                     // handle components dependencies on subset level
                     if (componentAnswer.dependencies) {
-                        for (let [name, version] of Object.entries(componentAnswer.dependencies)) {
-                            const res = yield this.addComponent(name, options, true);
-                            if (res) {
-                                addedComponents.push(res.component);
-                            }
-                        }
+                        component.extendsDependencies(componentAnswer.dependencies);
+                    }
+                    // handle composerJson from subset
+                    if (componentAnswer.composerJson) {
+                        component.extendsComposerJson(componentAnswer.composerJson);
+                    }
+                    // handle packageJson from subset
+                    if (componentAnswer.packageJson) {
+                        component.extendsPackageJson(componentAnswer.packageJson);
                     }
                     // copy the files
                     for (let file of files) {
@@ -221,29 +220,31 @@ export default class Components {
             }
             // handle components dependencies on root level
             if (component.dependencies) {
-                for (let [name, version] of Object.entries(component.dependencies)) {
-                    const res = yield this.addComponent(name, options, true);
-                    if (res) {
-                        addedComponents.push(res.component);
+                for (let [name, dep] of Object.entries(component.dependencies)) {
+                    switch (dep.type) {
+                        case 'component':
+                            const res = yield this.addComponent(name, options, true);
+                            if (res) {
+                                addedComponents = [...addedComponents, ...res.addedComponents];
+                            }
+                            break;
                     }
                 }
             }
-            // // handle added components dependencies
-            // for (let addedComponent of addedComponents) {
-            //   console.log(' ');
-            //   console.log(
-            //     `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
-            //   );
-            //   // install library level dependencies
-            //   await addedComponent.library.installDependencies();
-            //   // install component level dependencies
-            //   await addedComponent.installDependencies();
-            // }
-            // rename component if needed
-            yield component.renameFilesAndContents();
-            console.log(addedComponents);
+            // handle added components dependencies
+            for (let addedComponent of addedComponents) {
+                console.log(' ');
+                console.log(`▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`);
+                // install library level dependencies
+                yield addedComponent.library.installDependencies();
+                // install component level dependencies
+                yield addedComponent.installDependencies();
+            }
+            // finalize component
+            yield component.finalizeComponent();
             return {
                 component,
+                addedComponents,
             };
         });
     }

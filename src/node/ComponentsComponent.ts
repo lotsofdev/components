@@ -1,6 +1,8 @@
 import type {
   IComponentsComponentJson,
   IComponentsComponentSettings,
+  IComponentsComposerJson,
+  IComponentsPackageJson,
 } from './Components.types.js';
 
 import __ComponentsDependency from './ComponentsDependency.js';
@@ -10,8 +12,10 @@ import __ComponentsLibrary from './ComponentsLibrary.js';
 import { globSync as __globSync } from 'glob';
 
 import __fs from 'fs';
+import __path from 'path';
 
 import { __copySync, __readJsonSync, __renameSync } from '@lotsof/sugar/fs';
+import { __deepMerge } from '@lotsof/sugar/object';
 import {
   __capitalCase,
   __constantCase,
@@ -77,17 +81,24 @@ export default class ComponentsComponent {
 
     this._originalName = this.componentJson.name;
 
-    this._addDependencies();
+    this._updateDependencies();
   }
 
-  public async renameFilesAndContents(): Promise<void> {
+  public async finalizeComponent(): Promise<void> {
     // list all the files in the component
     const filesPaths = __globSync(`**/*`, {
       cwd: this.rootDir,
+      nodir: true,
     });
 
     for (let relFilePath of filesPaths) {
       const filePath = `${this.rootDir}/${relFilePath}`;
+
+      // do not touch files that does not start with the component name
+      const nameReg = new RegExp(`^${this._originalName}`);
+      if (!__path.basename(filePath).match(nameReg)) {
+        continue;
+      }
 
       // read the file content
       let content = __fs.readFileSync(filePath, 'utf8');
@@ -160,7 +171,33 @@ export default class ComponentsComponent {
     this._rootDir = destDir;
   }
 
-  private _addDependencies(): void {
+  public extendsDependencies(dependencies: Record<string, string>): void {
+    this._componentJson.dependencies = __deepMerge(
+      this._componentJson.dependencies ?? {},
+      dependencies ?? {},
+    );
+    this._updateDependencies();
+  }
+
+  public extendsComposerJson(composerJson: IComponentsComposerJson): void {
+    this._componentJson.composerJson = __deepMerge(
+      this._componentJson.composerJson ?? {},
+      composerJson ?? {},
+    );
+    this._updateDependencies();
+  }
+
+  public extendsPackageJson(packageJson: IComponentsPackageJson): void {
+    this._componentJson.packageJson = __deepMerge(
+      this._componentJson.packageJson ?? {},
+      packageJson ?? {},
+    );
+    this._updateDependencies();
+  }
+
+  private _updateDependencies(): void {
+    this._dependencies = {};
+
     if (this.componentJson.dependencies) {
       for (let [name, dep] of Object.entries(
         this.componentJson.dependencies ?? {},

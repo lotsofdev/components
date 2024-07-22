@@ -1,4 +1,4 @@
-import type { IComponentsComponentJson, IComponentsComponentSettings } from './Components.types.js';
+import type { IComponentsComponentJson, IComponentsComponentSettings, IComponentsComposerJson, IComponentsPackageJson } from './Components.types.js';
 import __ComponentsDependency from './ComponentsDependency.js';
 import __ComponentsLibrary from './ComponentsLibrary.js';
 export default class ComponentsComponent {
@@ -18,11 +18,14 @@ export default class ComponentsComponent {
     get version(): string;
     get dependencies(): Record<string, __ComponentsDependency>;
     constructor(rootDir: string, pkg: __ComponentsLibrary, settings: IComponentsComponentSettings);
-    renameFilesAndContents(): Promise<void>;
+    finalizeComponent(): Promise<void>;
     setRootDir(rootDir: string): void;
     setName(name: string): void;
     copyToSync(destDir: string): void;
-    private _addDependencies;
+    extendsDependencies(dependencies: Record<string, string>): void;
+    extendsComposerJson(composerJson: IComponentsComposerJson): void;
+    extendsPackageJson(packageJson: IComponentsPackageJson): void;
+    private _updateDependencies;
     hasDependencies(): boolean;
     addDependency(dependency: __ComponentsDependency): void;
     installDependencies(type?: 'npm' | 'composer' | ('npm' | 'composer')[]): Promise<__ComponentsDependency[]>;

@@ -157,6 +157,7 @@ export default class Components {
         component.setRootDir(componentDestinationDir);
         return {
           component,
+          addedComponents,
         };
       }
 
@@ -222,9 +223,10 @@ export default class Components {
       )) {
         switch (subset.type) {
           case 'list':
+          case 'checkbox':
             if (!options.y) {
               answer = await __inquier.prompt({
-                type: 'list',
+                type: subset.type,
                 default:
                   subsetCategory === 'engine'
                     ? this.settings.defaults.engine
@@ -250,31 +252,24 @@ export default class Components {
 
         // get the "files" from the componentAnswer
         // that contains all the files to copy
-        files = componentAnswer.files ?? [];
+        files = componentAnswer.files ?? files;
         if (!Array.isArray(files)) {
           files = [files];
         }
 
-        // handle the "depencencies" from the componentAnswer
-        if (componentAnswer.dependencies) {
-          for (let [name, dep] of Object.entries(
-            componentAnswer.dependencies,
-          )) {
-          }
-        }
-
-        console.log(componentAnswer);
-
         // handle components dependencies on subset level
         if (componentAnswer.dependencies) {
-          for (let [name, version] of Object.entries(
-            componentAnswer.dependencies,
-          )) {
-            const res = await this.addComponent(name, options, true);
-            if (res) {
-              addedComponents.push(res.component);
-            }
-          }
+          component.extendsDependencies(componentAnswer.dependencies);
+        }
+
+        // handle composerJson from subset
+        if (componentAnswer.composerJson) {
+          component.extendsComposerJson(componentAnswer.composerJson);
+        }
+
+        // handle packageJson from subset
+        if (componentAnswer.packageJson) {
+          component.extendsPackageJson(componentAnswer.packageJson);
         }
 
         // copy the files
@@ -303,35 +298,38 @@ export default class Components {
 
     // handle components dependencies on root level
     if (component.dependencies) {
-      for (let [name, version] of Object.entries(component.dependencies)) {
-        const res = await this.addComponent(name, options, true);
-        if (res) {
-          addedComponents.push(res.component);
+      for (let [name, dep] of Object.entries(component.dependencies)) {
+        switch (dep.type) {
+          case 'component':
+            const res = await this.addComponent(name, options, true);
+            if (res) {
+              addedComponents = [...addedComponents, ...res.addedComponents];
+            }
+            break;
         }
       }
     }
 
-    // // handle added components dependencies
-    // for (let addedComponent of addedComponents) {
-    //   console.log(' ');
-    //   console.log(
-    //     `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
-    //   );
+    // handle added components dependencies
+    for (let addedComponent of addedComponents) {
+      console.log(' ');
+      console.log(
+        `▓ Component <yellow>${addedComponent.library.name}/${addedComponent.name}</yellow>`,
+      );
 
-    //   // install library level dependencies
-    //   await addedComponent.library.installDependencies();
+      // install library level dependencies
+      await addedComponent.library.installDependencies();
 
-    //   // install component level dependencies
-    //   await addedComponent.installDependencies();
-    // }
+      // install component level dependencies
+      await addedComponent.installDependencies();
+    }
 
-    // rename component if needed
-    await component.renameFilesAndContents();
-
-    console.log(addedComponents);
+    // finalize component
+    await component.finalizeComponent();
 
     return {
       component,
+      addedComponents,
     };
   }
 }

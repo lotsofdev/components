@@ -2,18 +2,18 @@
   "version": "1.0.0",
   "name": "body",
   "description": "Simple body (suptitle, titles, subtutle, lead, (rich)text and buttons) component",
-  "files": ["*.php"],
+  "files": ["*.css"],
   "subset": {
     "engine": {
       "question": "Which engine do you use?",
-      "type": "list",
+      "type": "checkbox",
       "choices": ["twig", "blade"],
       "component": {
         "twig": {
-          "files": ["*.twig"]
+          "files": ["*.twig", "*.php"]
         },
         "blade": {
-          "files": ["*.blade.php"],
+          "files": ["*.php"],
           "dependencies": {
             "@lotsof/components/blade": "^1.0.0"
           }

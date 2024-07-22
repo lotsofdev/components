@@ -62,7 +62,7 @@ export interface IComponentsLibrarySettings {
 }
 
 export interface IComponentsComponentJsonSubset {
-  type: 'list';
+  type: 'list' | 'checkbox';
   question: string;
   choices: string[];
   component: IComponentsComponentJsonExtendable;
@@ -103,4 +103,5 @@ export interface IComponentsAddComponentOptions {
 
 export interface IComponentsAddComponentResult {
   component: __ComponentsComponent;
+  addedComponents: __ComponentsComponent[];
 }
