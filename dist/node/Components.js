@@ -71,9 +71,9 @@ export default class Components {
         }
         return libraries;
     }
-    getComponents(sourceIds) {
+    getComponents() {
         let componentsList = {};
-        const libraries = this.getLibraries(sourceIds);
+        const libraries = this.getLibraries();
         for (let [libraryName, p] of Object.entries(libraries)) {
             const components = p.getComponents();
             componentsList = Object.assign(Object.assign({}, componentsList), components);

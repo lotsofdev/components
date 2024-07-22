@@ -95,7 +95,15 @@ export default class ComponentsLibrary {
       }
     }
 
-    return componentsList;
+    // sort alphabetically
+    const sorted = Object.keys(componentsList).sort();
+    const sortedComponentsList: Record<string, __ComponentsComponent> = {};
+    for (let key of sorted) {
+      sortedComponentsList[key] = componentsList[key];
+    }
+
+    // return sorted list
+    return sortedComponentsList;
   }
 
   private _addDependencies(): void {

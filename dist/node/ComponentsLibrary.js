@@ -70,7 +70,14 @@ export default class ComponentsLibrary {
                 componentsList[`${this.name}/${component.name}`] = component;
             }
         }
-        return componentsList;
+        // sort alphabetically
+        const sorted = Object.keys(componentsList).sort();
+        const sortedComponentsList = {};
+        for (let key of sorted) {
+            sortedComponentsList[key] = componentsList[key];
+        }
+        // return sorted list
+        return sortedComponentsList;
     }
     _addDependencies() {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p;

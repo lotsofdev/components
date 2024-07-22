@@ -102,12 +102,10 @@ export default class Components {
     return libraries;
   }
 
-  public getComponents(
-    sourceIds?: string[],
-  ): Record<string, __ComponentsComponent> {
+  public getComponents(): Record<string, __ComponentsComponent> {
     let componentsList: Record<string, __ComponentsComponent> = {};
 
-    const libraries = this.getLibraries(sourceIds);
+    const libraries = this.getLibraries();
 
     for (let [libraryName, p] of Object.entries(libraries)) {
       const components = p.getComponents();

@@ -12,6 +12,6 @@ export default class Components {
     get libraries(): Record<string, __ComponentsLibrary>;
     updateLibraries(): Promise<IComponentsLibrariesUpdateResult>;
     getLibraries(): Record<string, __ComponentLibrary>;
-    getComponents(sourceIds?: string[]): Record<string, __ComponentsComponent>;
+    getComponents(): Record<string, __ComponentsComponent>;
     addComponent(componentId: string, options?: IComponentsAddComponentOptions, isDependency?: boolean): Promise<IComponentsAddComponentResult | undefined>;
 }
