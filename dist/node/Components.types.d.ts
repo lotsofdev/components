@@ -14,7 +14,7 @@ export interface IComponentsConfig {
     settings: IComponentsSettings;
 }
 export interface IComponentDefaults {
-    engine?: string;
+    engine?: string | string[];
 }
 export interface IComponentsComponentsJson {
     libraries?: Record<string, IComponentsLibrarySettings>;
@@ -80,7 +80,7 @@ export interface IComponentsAddComponentOptions {
     dir: string;
     y: boolean;
     name?: string;
-    engine?: string;
+    engine?: string | string[];
 }
 export interface IComponentsAddComponentResult {
     component: __ComponentsComponent;

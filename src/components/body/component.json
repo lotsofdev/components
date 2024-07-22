@@ -7,18 +7,31 @@
     "engine": {
       "question": "Which engine do you use?",
       "type": "checkbox",
-      "choices": ["twig", "blade"],
+      "choices": ["blade", "twig", "tsx"],
       "component": {
         "twig": {
-          "files": ["*.twig", "body.type.php", "body.preview.php"]
+          "files": ["*.twig", "body.type.php"]
         },
         "blade": {
-          "files": ["*.php"],
+          "files": ["*.blade.php", "body.type.php"],
           "dependencies": {
             "@lotsof/components/blade": "^1.0.0"
           }
+        },
+        "tsx": {
+          "files": ["*.tsx", "body.type.ts"],
+          "packageJson": {
+            "dependencies": {
+              "react": "^18.0.0"
+            }
+          }
         }
       }
+    }
+  },
+  "packageJson": {
+    "dependencies": {
+      "@lotsof/types": "^1.0"
     }
   },
   "composerJson": {

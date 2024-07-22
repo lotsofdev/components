@@ -18,7 +18,7 @@ export interface IComponentsConfig {
 }
 
 export interface IComponentDefaults {
-  engine?: string;
+  engine?: string | string[];
 }
 
 export interface IComponentsComponentsJson {
@@ -98,7 +98,7 @@ export interface IComponentsAddComponentOptions {
   dir: string;
   y: boolean;
   name?: string;
-  engine?: string;
+  engine?: string | string[];
 }
 
 export interface IComponentsAddComponentResult {

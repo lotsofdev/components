@@ -161,9 +161,7 @@ export default class Components {
                             if (!options.y) {
                                 answer = yield __inquier.prompt({
                                     type: subset.type,
-                                    default: subsetCategory === 'engine'
-                                        ? this.settings.defaults.engine
-                                        : null,
+                                    default: this.settings.defaults[subsetCategory],
                                     name: subsetCategory,
                                     message: subset.question,
                                     choices: subset.choices,
@@ -171,16 +169,17 @@ export default class Components {
                             }
                             else {
                                 answer = {
-                                    [subsetCategory]: subsetCategory === 'engine'
-                                        ? this.settings.defaults.engine
-                                        : null,
+                                    [subsetCategory]: this.settings.defaults[subsetCategory],
                                 };
                             }
                             break;
                     }
+                    // set in defaults to maintain the user choices across components
+                    this.settings.defaults[subsetCategory] = answer[subsetCategory];
                     // handle answer
                     let finalAnswer = {};
                     if (Array.isArray(answer[subsetCategory])) {
+                        // extend the final answer with the subset components
                         for (let a of answer[subsetCategory]) {
                             for (let [key, value] of Object.entries(subset.component[a])) {
                                 if (Array.isArray(value)) {

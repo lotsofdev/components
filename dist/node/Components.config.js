@@ -4,7 +4,7 @@ const config = {
     settings: {
         libraryRootDir: `${__homedir()}/.lotsof/components`,
         defaults: {
-            engine: 'twig',
+            engine: ['blade'],
         },
     },
 };
