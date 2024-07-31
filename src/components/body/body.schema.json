@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.body",
+  "title": "Body",
+  "description": "Simple body (suptitle, titles, subtitle, lead, (rich)text and buttons) component",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Unique identifier"
+    },
+    "suptitle": {
+      "type": "string",
+      "description": "Suptitle of the body"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the body"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Subtitle of the body"
+    },
+    "lead": {
+      "type": "string",
+      "description": "Lead of the body"
+    },
+    "text": {
+      "type": "string",
+      "description": "Text of the body"
+    },
+    "buttons": {
+      "type": "array",
+      "description": "Buttons of the body",
+      "items": {
+        "$ref": "../button/button.schema.json"
+      }
+    },
+    "suptitleLevel": {
+      "type": "number",
+      "description": "Suptitle level (1-6)",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "titleLevel": {
+      "type": "number",
+      "description": "Title level (1-6)",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "subtitleLevel": {
+      "type": "number",
+      "description": "Subtitle level (1-6)",
+      "minimum": 1,
+      "maximum": 6
+    },
+    "typoClasses": {
+      "type": "boolean",
+      "description": "Use typography classes or not"
+    }
+  }
+}

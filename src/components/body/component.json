@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
   "name": "body",
-  "description": "Simple body (suptitle, titles, subtutle, lead, (rich)text and buttons) component",
+  "description": "Simple body (suptitle, titles, subtitle, lead, (rich)text and buttons) component",
   "files": ["*.css"],
   "subset": {
     "engine": {

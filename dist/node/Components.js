@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import * as __glob from 'glob';
 import __inquier from 'inquirer';
+import { __isCommandExists } from '@lotsof/sugar/is';
 import { __getConfig } from '@lotsof/config';
 import './Components.config.js';
 import { __packageRootDir } from '@lotsof/sugar/package';
@@ -26,6 +27,19 @@ export default class Components {
         var _a;
         this._libraries = {};
         this.settings = Object.assign(Object.assign({}, ((_a = __getConfig('components.settings')) !== null && _a !== void 0 ? _a : {})), (settings !== null && settings !== void 0 ? settings : {}));
+        // check dependencies
+        this.checkDependencies();
+    }
+    checkDependencies() {
+        return __awaiter(this, void 0, void 0, function* () {
+            const npmExists = yield __isCommandExists('npm'), composerExists = yield __isCommandExists('composer');
+            if (!npmExists) {
+                throw new Error(`The <yellow>npm</yellow> command is required to install dependencies.`);
+            }
+            if (!composerExists) {
+                throw new Error(`The <yellow>composer</yellow> command is required to install dependencies.`);
+            }
+        });
     }
     registerLibraryFromSettings(settings) {
         settings.$components = this;

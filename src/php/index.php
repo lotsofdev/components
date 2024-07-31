@@ -5,13 +5,35 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/../components/index.php';
 
 // routing
-$uri = substr($_SERVER['REQUEST_URI'], 1);
-$potentialFilePath = __DIR__ . '/../components/' . $uri . '/' . $uri . '.preview.php';
+$url = parse_url($_SERVER['REQUEST_URI']);
 
-if (file_exists($potentialFilePath)) {
-    require_once $potentialFilePath;
-} else {
+$queryString = [];
+if (isset($url['query'])) {
+    parse_str($url['query'], $queryString);
 }
 
+$engine = 'php';
+if (isset($queryString['engine'])) {
+    $engine = $queryString['engine'];
+}
+
+$data = [
+    'component' => $url['path'],
+];
+
+switch ($engine) {
+    case 'ts':
+        $previewFilePath = __DIR__ . '/../components/' . $url['path'] . '/' . $url['path'] . '.preview.ts';
+        if (file_exists($previewFilePath)) {
+            require_once __DIR__ . '/engines/ts.php';
+        }
+        break;
+    case 'blade':
+        $previewFilePath = __DIR__ . '/../components/' . $url['path'] . '/' . $url['path'] . '.preview.php';
+        if (file_exists($previewFilePath)) {
+            require_once __DIR__ . '/engines/blade.php';
+        }
+        break;
+}
 
 

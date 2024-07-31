@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.button",
+  "title": "Button",
+  "description": "Buttons component",
+  "type": "object",
+  "properties": {
+    "style": {
+      "type": "string",
+      "enum": ["Solid", "Outline", "Text"]
+    },
+    "class": {
+      "type": "string",
+      "description": "CSS class"
+    },
+    "link": {
+      "$ref": "../link/link.schema.json"
+    }
+  }
+}

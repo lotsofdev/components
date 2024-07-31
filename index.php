@@ -1,3 +1,14 @@
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    ob_start();
+    require_once __DIR__ . '/src/php/index.php';
+    $html = ob_get_clean();
+    print json_encode(['html' => $html]);
+    exit;
+}
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -11,16 +22,15 @@
 
 <body>
 
-    <main class="layout-main">
+    <main class="layout-main" id="main">
 
         <?php
-
         require_once __DIR__ . '/src/php/index.php';
-
-
         ?>
 
     </main>
+
+    <s-carpenter id="s-carpenter" verbose />
 
 </body>
 

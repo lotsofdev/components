@@ -1,6 +1,8 @@
 import * as __glob from 'glob';
 import __inquier from 'inquirer';
 
+import { __isCommandExists } from '@lotsof/sugar/is';
+
 import { __getConfig } from '@lotsof/config';
 
 import './Components.config.js';
@@ -44,6 +46,24 @@ export default class Components {
       ...(__getConfig('components.settings') ?? {}),
       ...(settings ?? {}),
     };
+
+    // check dependencies
+    this.checkDependencies();
+  }
+
+  public async checkDependencies(): Promise<void> {
+    const npmExists = await __isCommandExists('npm'),
+      composerExists = await __isCommandExists('composer');
+    if (!npmExists) {
+      throw new Error(
+        `The <yellow>npm</yellow> command is required to install dependencies.`,
+      );
+    }
+    if (!composerExists) {
+      throw new Error(
+        `The <yellow>composer</yellow> command is required to install dependencies.`,
+      );
+    }
   }
 
   public registerLibraryFromSettings(

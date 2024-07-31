@@ -7,6 +7,7 @@ export default class Components {
     settings: IComponentsSettings;
     get libraryRootDir(): string;
     constructor(settings?: IComponentsSettings);
+    checkDependencies(): Promise<void>;
     registerLibraryFromSettings(settings: IComponentsLibrarySettings): __ComponentsLibrary;
     registerLibrary(library: __ComponentsLibrary): __ComponentsLibrary;
     get libraries(): Record<string, __ComponentsLibrary>;

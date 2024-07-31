@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.link",
+  "title": "Link",
+  "description": "Link component",
+  "type": "object",
+  "properties": {
+    "href": {
+      "type": "string",
+      "description": "The URL to link to",
+      "format": "uri"
+    },
+    "text": {
+      "type": "string",
+      "description": "The text to display"
+    },
+    "title": {
+      "type": "string",
+      "description": "The title of the link"
+    },
+    "target": {
+      "type": "string",
+      "description": "The target of the link",
+      "enum": ["_blank", "_self", "_parent", "_top"]
+    },
+    "class": {
+      "type": "string",
+      "description": "CSS class"
+    },
+    "noopener": {
+      "type": "boolean",
+      "description": "Whether to use rel='noopener' on the link"
+    },
+    "noreferrer": {
+      "type": "boolean",
+      "description": "Whether to use rel='noreferrer' on the link"
+    },
+    "ariaLabel": {
+      "type": "string",
+      "description": "The aria-label attribute"
+    }
+  }
+}
