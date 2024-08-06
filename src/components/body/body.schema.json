@@ -7,30 +7,37 @@
   "properties": {
     "id": {
       "type": "string",
+      "title": "ID",
       "description": "Unique identifier"
     },
     "suptitle": {
       "type": "string",
+      "title": "Suptitle",
       "description": "Suptitle of the body"
     },
     "title": {
       "type": "string",
+      "title": "Title",
       "description": "Title of the body"
     },
     "subtitle": {
       "type": "string",
+      "title": "Subtitle",
       "description": "Subtitle of the body"
     },
     "lead": {
       "type": "string",
+      "title": "Lead",
       "description": "Lead of the body"
     },
     "text": {
       "type": "string",
+      "title": "Text",
       "description": "Text of the body"
     },
     "buttons": {
       "type": "array",
+      "title": "Buttons",
       "description": "Buttons of the body",
       "items": {
         "$ref": "../button/button.schema.json"
@@ -38,24 +45,28 @@
     },
     "suptitleLevel": {
       "type": "number",
+      "title": "Suptitle level",
       "description": "Suptitle level (1-6)",
       "minimum": 1,
       "maximum": 6
     },
     "titleLevel": {
       "type": "number",
+      "title": "Title level",
       "description": "Title level (1-6)",
       "minimum": 1,
       "maximum": 6
     },
     "subtitleLevel": {
       "type": "number",
+      "title": "Subtitle level",
       "description": "Subtitle level (1-6)",
       "minimum": 1,
       "maximum": 6
     },
     "typoClasses": {
       "type": "boolean",
+      "title": "Typo classes",
       "description": "Use typography classes or not"
     }
   }

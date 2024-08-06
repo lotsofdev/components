@@ -8,11 +8,13 @@
     "href": {
       "type": "string",
       "description": "The URL to link to",
-      "format": "uri"
+      "format": "uri",
+      "minLength": 1
     },
     "text": {
       "type": "string",
-      "description": "The text to display"
+      "description": "The text to display",
+      "minLength": 1
     },
     "title": {
       "type": "string",
@@ -29,7 +31,8 @@
     },
     "noopener": {
       "type": "boolean",
-      "description": "Whether to use rel='noopener' on the link"
+      "description": "Whether to use rel='noopener' on the link",
+      "default": false
     },
     "noreferrer": {
       "type": "boolean",

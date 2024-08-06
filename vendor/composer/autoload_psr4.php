@@ -9,5 +9,8 @@ return array(
     'eftec\\bladeone\\' => array($vendorDir . '/eftec/bladeone/lib'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'MabeEnum\\' => array($vendorDir . '/marc-mabe/php-enum/src'),
+    'JsonSchema\\' => array($vendorDir . '/justinrainbow/json-schema/src/JsonSchema'),
+    'Icecave\\Repr\\' => array($vendorDir . '/icecave/repr/src'),
     'Faker\\' => array($vendorDir . '/fakerphp/faker/src/Faker'),
 );

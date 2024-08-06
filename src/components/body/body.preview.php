@@ -22,12 +22,12 @@ for ($i = 1; $i <= 1; $i++) {
     ?>
 
     <script carpenter type="application/json">{
-                            "id": "body-<?= $i; ?>",
-                            "name": "Body",
-                            "description": "Simple body (suptitle, titles, subtitle, lead, (rich)text and buttons) component",
-                            "schema": <?= json_encode($body->toSchema(), JSON_PRETTY_PRINT); ?>,
-                            "values": <?= json_encode($body->toObject(), JSON_PRETTY_PRINT); ?>
-                        }</script>
+        "id": "body-<?= $i; ?>",
+        "name": "Body",
+        "description": "Simple body (suptitle, titles, subtitle, lead, (rich)text and buttons) component",
+        "schema": <?= json_encode($body->jsonSchema(), JSON_PRETTY_PRINT); ?>,
+        "values": <?= json_encode($body->toObject(), JSON_PRETTY_PRINT); ?>
+    }</script>
 
     <?php
 

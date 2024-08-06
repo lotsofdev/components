@@ -4,7 +4,8 @@
 @import './button/button.css';
 @import './card/card.css';
 @import './componentPreview/componentPreview.css';
-@import './headerBanner/headerBanner.css';
+@import './error/error.css';
+@import './hero/hero.css';
 @import './image/image.css';
 @import './layout/layout.css';
 @import './propertiesPreview/propertiesPreview.css';

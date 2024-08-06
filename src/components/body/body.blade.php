@@ -1,18 +1,18 @@
 <div class="body typo-rhythm typo-format">
 
-    @if ($suptitle !== null)
+    @if ($suptitle !== '')
         <h{{ $suptitleLevel }} class="_suptitle typo-h{{ $suptitleLevel }}">{{ $suptitle }}</h{{ $suptitleLevel }}>
     @endif
 
-    @if ($title !== null)
+    @if ($title !== '')
         <h{{ $titleLevel }} class="_title typo-h{{ $titleLevel }}">{{ $title }}</h{{ $titleLevel }}>
     @endif
 
-    @if ($subtitle !== null)
+    @if ($subtitle !== '')
         <h{{ $subtitleLevel }} class="_subtitle typo-h{{ $subtitleLevel }}">{{ $subtitle }}</h{{ $subtitleLevel }}>
     @endif
 
-    @if ($lead !== null)
+    @if ($lead !== '')
         <p class="_lead typo-lead">{{ $lead }}</p>
     @endif
 

@@ -1,0 +1,19 @@
+@import './hero.bare.css';
+
+.hero {
+  padding-block: s-space(30);
+
+  &.-dark {
+    color: white;
+  }
+
+  &.-small {
+    height: 350px;
+  }
+  &.-medium {
+    height: 500px;
+  }
+  &.-large {
+    height: 700px;
+  }
+}

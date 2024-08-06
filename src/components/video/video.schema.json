@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.video",
+  "title": "Video",
+  "description": "Simple video component",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "Unique identifier"
+    },
+    "src": {
+      "type": "string",
+      "title": "Source",
+      "description": "Video source",
+      "format": "uri"
+    },
+    "poster": {
+      "type": "string",
+      "title": "Poster",
+      "description": "Video poster image",
+      "format": "uri"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Video title"
+    },
+    "autoplay": {
+      "type": "boolean",
+      "title": "Autoplay",
+      "description": "Autoplay video"
+    },
+    "controls": {
+      "type": "boolean",
+      "title": "Controls",
+      "description": "Show video controls"
+    },
+    "loop": {
+      "type": "boolean",
+      "title": "Loop",
+      "description": "Loop video"
+    },
+    "muted": {
+      "type": "boolean",
+      "title": "Muted",
+      "description": "Mute video"
+    },
+    "playsinline": {
+      "type": "boolean",
+      "title": "Playsinline",
+      "description": "Play video inline"
+    }
+  }
+}

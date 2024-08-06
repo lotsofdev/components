@@ -4,7 +4,7 @@ namespace Components\Typo;
 
 class Typo extends \Lotsof\Types\Base
 {
-    public function toHtml(): string
+    public function toHtml(bool $showErrors = null): string
     {
 
         $faker = \Faker\Factory::create();

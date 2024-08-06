@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "name": "hero",
+  "description": "Simple hero component",
+  "files": ["*"],
+  "dependencies": {}
+}

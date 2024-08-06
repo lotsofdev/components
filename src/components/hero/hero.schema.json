@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.hero",
+  "title": "Hero",
+  "description": "Simple hero (body, image and/or video) component",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "Unique identifier"
+    },
+    "theme": {
+      "type": "string",
+      "title": "Theme",
+      "description": "Theme of the hero",
+      "enum": ["light", "dark"],
+      "default": "light"
+    },
+    "size": {
+      "type": "string",
+      "title": "Size",
+      "description": "Size of the hero",
+      "enum": ["small", "medium", "large"],
+      "default": "medium"
+    },
+    "align": {
+      "type": "string",
+      "title": "Align",
+      "description": "Alignment of the hero",
+      "enum": ["left", "center", "right"],
+      "default": "left"
+    },
+    "body": {
+      "$ref": "../body/body.schema.json",
+      "type": "object",
+      "title": "Body",
+      "description": "Hero body"
+    },
+    "image": {
+      "$ref": "../image/image.schema.json"
+    },
+    "video": {
+      "$ref": "../video/video.schema.json"
+    }
+  }
+}

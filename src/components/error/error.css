@@ -1,0 +1,22 @@
+.error {
+  background: s-color(error, --alpha 0.1);
+  padding: s-space(30);
+  border-radius: s-radius();
+  color: s-color(error);
+  border: 1px solid s-color(error, --alpha 0.1);
+
+  .error_title {
+    font: s-font(title);
+    font-size: s-size(30);
+    margin-bottom: s-space(10);
+  }
+  .error_items {
+  }
+  .error_item {
+  }
+  .error_prop {
+    font-weight: bold;
+  }
+  .error_message {
+  }
+}

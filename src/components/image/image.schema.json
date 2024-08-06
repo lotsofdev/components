@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.image",
+  "title": "Image",
+  "description": "Simple image component",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "Unique identifier"
+    },
+    "src": {
+      "type": "string",
+      "title": "Source",
+      "description": "Image source",
+      "format": "uri"
+    },
+    "alt": {
+      "type": "string",
+      "title": "Alt",
+      "description": "Image alt text"
+    },
+    "title": {
+      "type": "string",
+      "title": "Title",
+      "description": "Image title"
+    }
+  }
+}

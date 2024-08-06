@@ -15,9 +15,4 @@ class ComponentPreview extends \Lotsof\Types\Base
         $this->component = $component;
     }
 
-    public function toHtml(): string
-    {
-        return 'hello';
-    }
-
 }

@@ -7,4 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'Stringable' => $vendorDir . '/marc-mabe/php-enum/stubs/Stringable.php',
 );

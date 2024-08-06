@@ -7,7 +7,8 @@
   "properties": {
     "style": {
       "type": "string",
-      "enum": ["Solid", "Outline", "Text"]
+      "enum": ["solid", "outline", "text"],
+      "default": "solid"
     },
     "class": {
       "type": "string",
