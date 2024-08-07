@@ -1,8 +1,6 @@
 <?php
 
-require_once __DIR__ . '/blade/blade.php';
-
-$files = glob(__DIR__ . '/**/*.type.php');
+$files = glob(__DIR__ . '/**/*.component.php');
 foreach ($files as $file) {
     require_once $file;
 }

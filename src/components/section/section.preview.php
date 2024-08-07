@@ -1,14 +1,5 @@
 <?php
 
-namespace Components\Section;
-
-$section = \Components\Section\Section::mock(
-);
-$sectionPreview = new \Components\ComponentPreview\ComponentPreview(
-    title: 'Section',
-    description: 'A section component',
-    component: $section
-);
-
-print \Components\Blade\render('componentPreview.componentPreview', $sectionPreview->toObject());
-
+$componentTypeClass = \Lotsof\Types\Section::class;
+$componentClass = \Components\Section\Section::class;
+\Lotsof\Components\Component::preview($componentClass, $componentTypeClass);

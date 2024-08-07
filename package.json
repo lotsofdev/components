@@ -10,20 +10,26 @@
     "build": "tsc"
   },
   "dependencies": {
+    "@lotsof/carpenter": "^1.0.0",
+    "@lotsof/components": "^1.0.0",
     "@lotsof/config": "^1.0.0",
     "@lotsof/sugar": "^1.0.0",
     "@lotsof/sugarcss": "^1.0.0",
     "@lotsof/types": "^1.0.0",
-    "@lotsof/carpenter": "^1.0.0",
     "glob": "^10.4.1",
+    "react-dom": "^18.3.1",
     "typescript": "^5.4.5"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
     "vite": "^5.0.11"
   },
-  "main": "dist/node/_exports.js",
-  "module": "dist/node/_exports.js",
+  "exports": {
+    ".": {
+      "node": "./dist/node/_exports.js",
+      "browser": "./dist/js/_exports.js"
+    }
+  },
   "types": "src/node/_exports.ts",
   "homepage": "https://lotsof.dev"
 }

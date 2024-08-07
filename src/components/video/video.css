@@ -1,4 +1,1 @@
-.video {
-  aspect-ratio: 16/9;
-  width: 100%;
-}
+@import './video.bare.css';

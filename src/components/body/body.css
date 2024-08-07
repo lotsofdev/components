@@ -1,6 +1,22 @@
+@import './body.bare.css';
+
 .body {
+  ._suptitle {
+  }
+
+  ._title {
+  }
+
+  ._subtitle {
+  }
+
+  ._lead {
+  }
+
+  ._text {
+  }
+
   ._buttons {
-    display: flex;
     gap: s-space(20);
   }
 }

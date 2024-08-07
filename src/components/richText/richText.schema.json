@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.richText",
+  "title": "Rich Text",
+  "description": "Rich text component",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "title": "Text",
+      "description": "Rich text content",
+      "widget": "wysiwyg"
+    }
+  }
+}

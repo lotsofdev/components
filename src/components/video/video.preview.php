@@ -1,13 +1,5 @@
 <?php
 
-namespace Components\Video;
-
-$video = \Components\Video\Video::mock();
-$videoPreview = new \Components\ComponentPreview\ComponentPreview(
-    title: 'Video',
-    description: 'A video component',
-    component: $video
-);
-
-print \Components\Blade\render('componentPreview.componentPreview', $videoPreview->toObject());
-
+$componentTypeClass = \Lotsof\Types\Video::class;
+$componentClass = \Components\Video\Video::class;
+\Lotsof\Components\Component::preview($componentClass, $componentTypeClass);

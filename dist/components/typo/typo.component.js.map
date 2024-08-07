@@ -1,0 +1,1 @@
+{"version":3,"file":"typo.component.js","sourceRoot":"","sources":["../../../src/components/typo/typo.component.tsx"],"names":[],"mappings":"AAAA,OAAO,KAAK,MAAM,OAAO,CAAC;AAG1B,MAAM,CAAC,OAAO,UAAU,IAAI,CAAC,KAAY;IACvC,OAAO,CACL,6BACE,SAAS,EAAE,8BAA8B,EACzC,EAAE,EAAE,KAAK,CAAC,EAAE,EACZ,uBAAuB,EAAE,EAAE,MAAM,EAAE,KAAK,CAAC,IAAI,EAAE,GAC1C,CACR,CAAC;AACJ,CAAC"}

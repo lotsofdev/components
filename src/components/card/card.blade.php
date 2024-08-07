@@ -1,10 +1,10 @@
-<article class="card">
+<article class="card" id="{{ $id }}">
     @if ($image || $video)
         <figure class="_figure">
             @if (@$image)
-                {!! $image->html !!}
+                {!! $image !!}
             @elseif (@$video)
-                {!! $video->html !!}
+                {!! $video !!}
             @endif
             @if (@$areaFigure)
                 <div class="_area-figure">{!! $areaFigure !!}</div>
@@ -18,7 +18,7 @@
                     {!! $areaBeforeBody !!}
                 </div>
             @endif
-            {!! $body->html !!}
+            {!! $body !!}
             @if ($areaBody)
                 <div class="_area-body">
                     {!! $areaBody !!}

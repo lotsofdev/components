@@ -1,12 +1,11 @@
+@import './button.bare.css';
+
 .button {
-  display: inline-block;
-  padding: s-space(10) s-space(20);
   background: s-color(current);
   border-radius: s-radius();
   border: 1px solid s-color(current);
   color: s-color(current, --lighten 50);
   font-size: s-size(16);
-  cursor: pointer;
   transition: s-transition(fast);
 
   &:hover {

@@ -5,6 +5,11 @@
   "description": "Buttons component",
   "type": "object",
   "properties": {
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "Unique identifier"
+    },
     "style": {
       "type": "string",
       "enum": ["solid", "outline", "text"],

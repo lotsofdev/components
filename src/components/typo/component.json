@@ -2,10 +2,41 @@
   "version": "1.0.0",
   "name": "typo",
   "description": "Typography component",
-  "files": ["*.php", "*.css"],
+  "files": ["typo.component.php", "typo.preview.php", "*.css"],
+  "subset": {
+    "engine": {
+      "question": "Which engine do you use?",
+      "type": "checkbox",
+      "choices": ["blade", "twig", "tsx"],
+      "component": {
+        "twig": {
+          "files": ["*.twig", "typo.type.php"]
+        },
+        "blade": {
+          "files": ["*.blade.php", "typo.type.php"],
+          "dependencies": {
+            "@lotsof/components/blade": "^1.0.0"
+          }
+        },
+        "tsx": {
+          "files": ["*.tsx", "typo.type.ts"],
+          "packageJson": {
+            "dependencies": {
+              "react": "^18.0.0"
+            }
+          }
+        }
+      }
+    }
+  },
   "composerJson": {
     "require": {
-      "fakerphp/faker": "^1.23"
+      "lotsof/types": "^1.0.0"
+    }
+  },
+  "packageJson": {
+    "dependencies": {
+      "@lotsof/types": "^1.0.0"
     }
   }
 }

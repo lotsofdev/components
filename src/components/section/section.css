@@ -1,30 +1,9 @@
+@import './section.bare.css';
+
 .section {
-  position: relative;
-  min-height: 200px;
-
-  &.-fullwidth {
-    width: 100vw;
-    left: 50%;
-    translate: -50% 0;
-  }
-
   .section_background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-
-    img,
-    video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
   }
 
   .section_body {
-    position: relative;
-    @s-container;
   }
 }

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "components.card",
+  "title": "Card",
+  "description": "Card component",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "title": "ID",
+      "description": "Unique identifier"
+    },
+    "body": {
+      "$ref": "../body/body.schema.json"
+    },
+    "image": {
+      "$ref": "../image/image.schema.json"
+    },
+    "video": {
+      "$ref": "../video/video.schema.json"
+    }
+  }
+}

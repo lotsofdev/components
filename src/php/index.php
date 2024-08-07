@@ -2,6 +2,7 @@
 
 // deps
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/_requires.php';
 require_once __DIR__ . '/../components/index.php';
 
 // routing
@@ -18,22 +19,24 @@ if (isset($queryString['engine'])) {
 }
 
 $data = [
-    'component' => $url['path'],
+    'component' => str_replace('/', '', $url['path']),
 ];
 
 switch ($engine) {
-    case 'ts':
-        $previewFilePath = __DIR__ . '/../components/' . $url['path'] . '/' . $url['path'] . '.preview.ts';
-        if (file_exists($previewFilePath)) {
-            require_once __DIR__ . '/engines/ts.php';
-        }
+    case 'react':
+        ?>
+
+        <script type="module"
+            src="http://0.0.0.0:5173/src/components/<?= $data['component'] ?>/<?= $data['component'] ?>.preview.ts">
+            </script>
+
+        <?php
         break;
     case 'blade':
-        $previewFilePath = __DIR__ . '/../components/' . $url['path'] . '/' . $url['path'] . '.preview.php';
-        if (file_exists($previewFilePath)) {
-            require_once __DIR__ . '/engines/blade.php';
-        }
+    case 'twig':
+    case 'php':
+    default:
+
+        require_once __DIR__ . '/../components/' . $data['component'] . '/' . $data['component'] . '.preview.php';
         break;
 }
-
-

@@ -1,3 +1,1 @@
-.image {
-  max-width: 100%;
-}
+@import './image.bare.css';
