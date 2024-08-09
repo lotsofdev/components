@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     </main>
 
-    <s-carpenter id="s-carpenter" verbose />
+    <s-carpenter id="s-carpenter" saveState verbose />
 
 </body>
 
