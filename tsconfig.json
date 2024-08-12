@@ -1,16 +1,25 @@
 {
-  "exclude": ["./dist/**/*", "./vendor/**/*"],
+  "exclude": [
+    "lotsof.config.ts",
+    "package.json",
+    "./src/**/*.test.*",
+    "./src/components/**/*",
+    "./dist/**/*",
+    "./node_modules/**/*",
+    "./vendor/**/*"
+  ],
   "compilerOptions": {
     "noImplicitAny": false,
     "jsx": "react",
-    "rootDir": "src",
-    "outDir": "dist",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",
     "module": "nodenext",
     "sourceMap": true,
     "declaration": true,
+
     "esModuleInterop": true,
     "moduleResolution": "nodenext"
   }

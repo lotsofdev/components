@@ -68,6 +68,7 @@ export interface IComponentsDependencies {
 }
 export interface IComponentsSettings {
     libraryRootDir: string;
+    rootDir: string;
     defaults: IComponentDefaults;
 }
 export interface IComponentsLibraryUpdateResult {

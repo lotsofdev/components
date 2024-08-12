@@ -1,5 +1,6 @@
 import type { IComponentsConfig } from '@lotsof/components';
 
+import { __packageRootDir } from '@lotsof/sugar/package';
 import { homedir as __homedir } from 'os';
 
 import { __defineConfig } from '@lotsof/config';
@@ -7,6 +8,7 @@ import { __defineConfig } from '@lotsof/config';
 const config: IComponentsConfig = {
   settings: {
     libraryRootDir: `${__homedir()}/.lotsof/components`,
+    rootDir: `${__packageRootDir()}/src/components`,
     defaults: {
       engine: ['blade'],
     },

@@ -6,7 +6,7 @@
   "author": "Olivier Bossel <olivier.bossel@gmail.com> (https://coffeekraken.io)",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc --watch & vite --host & php -S 0.0.0.0:3000 index.php",
+    "dev": "tsc --watch",
     "build": "tsc"
   },
   "dependencies": {

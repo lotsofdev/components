@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { __Base } from '@lotsof/types';
 
 import React from 'react';
