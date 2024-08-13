@@ -1,5 +1,7 @@
 <div class="body typo-rhythm typo-format">
 
+    blade
+
     @if ($suptitle !== '')
         <h{{ $suptitleLevel }} class="_suptitle typo-h{{ $suptitleLevel }}">{{ $suptitle }}</h{{ $suptitleLevel }}>
     @endif
@@ -23,7 +25,7 @@
     @if (is_array($buttons) && count($buttons) > 0)
         <div class="_buttons">
             @foreach ($buttons as $button)
-                {!! $button->html !!}
+                @include ('button.button', (array) $button)
             @endforeach
         </div>
     @endif

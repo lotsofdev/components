@@ -6,8 +6,8 @@
   "author": "Olivier Bossel <olivier.bossel@gmail.com> (https://coffeekraken.io)",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
+    "dev": "tsc --watch & vite --host",
+    "build": "tsc && vite build"
   },
   "dependencies": {
     "@lotsof/carpenter": "^1.0.0",

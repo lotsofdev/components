@@ -2,7 +2,7 @@
 
 namespace Components\Body;
 
-class Body extends \Lotsof\Components\Component
+class BodyComponent extends \Lotsof\Components\Component
 {
     public function toDomElement(): \DOMElement
     {

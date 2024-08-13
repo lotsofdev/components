@@ -4,9 +4,9 @@ namespace Components\Link;
 
 class Link extends \Lotsof\Components\Component
 {
-    protected \Lotsof\Types\Link $data;
+    protected \Lotsof\Types\LinkType $data;
 
-    public function __construct(\Lotsof\Types\Link $link)
+    public function __construct(\Lotsof\Types\LinkType $link)
     {
         parent::__construct($link);
     }

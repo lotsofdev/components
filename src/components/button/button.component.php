@@ -4,9 +4,9 @@ namespace Components\Button;
 
 class Button extends \Lotsof\Components\Component
 {
-    protected \Lotsof\Types\Button $data;
+    protected \Lotsof\Types\ButtonType $data;
 
-    public function __construct(\Lotsof\Types\Button $button)
+    public function __construct(\Lotsof\Types\ButtonType $button)
     {
         parent::__construct($button);
     }

@@ -4,7 +4,7 @@ namespace Components\Image;
 
 class Image extends \Lotsof\Components\Component
 {
-    protected \Lotsof\Types\Image $data;
+    protected \Lotsof\Types\ImageType $data;
 
     public function toDomElement(): \DOMElement
     {

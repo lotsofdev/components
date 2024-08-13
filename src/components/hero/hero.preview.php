@@ -1,5 +1,6 @@
 <?php
 
-$componentTypeClass = \Lotsof\Types\Hero::class;
-$componentClass = \Components\Hero\Hero::class;
-\Lotsof\Components\Component::preview($componentClass, $componentTypeClass);
+namespace Components\Hero;
+
+$component = new HeroComponent(HeroType::mock());
+print $component->toHtml();

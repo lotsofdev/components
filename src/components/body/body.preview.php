@@ -1,5 +1,6 @@
 <?php
 
-$componentTypeClass = \Lotsof\Types\Body::class;
-$componentClass = \Components\Body\Body::class;
-\Lotsof\Components\Component::preview($componentClass, $componentTypeClass);
+namespace Components\Body;
+
+$component = new BodyComponent(BodyType::mock());
+print $component->toHtml();

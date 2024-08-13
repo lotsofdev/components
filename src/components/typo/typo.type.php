@@ -1,7 +1,10 @@
 <?php
 
+
 namespace Components\Typo;
 
-class Typo extends \Lotsof\Types\Typo
+class TypoType extends \Lotsof\Types\TypoType
 {
+
+
 }

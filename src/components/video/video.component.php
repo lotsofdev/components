@@ -5,7 +5,7 @@ namespace Components\Video;
 class Video extends \Lotsof\Components\Component
 {
 
-    protected \Lotsof\Types\Video $data;
+    protected \Lotsof\Types\VideoType $data;
 
     public function toDomElement(): \DOMElement
     {

@@ -1,5 +1,5 @@
 <?php
 
-$componentTypeClass = \Lotsof\Types\Typo::class;
-$componentClass = \Components\Typo\Typo::class;
+$componentTypeClass = \Lotsof\Types\TypoType::class;
+$componentClass = \Components\Typo\TypoType::class;
 \Lotsof\Components\Component::preview($componentClass, $componentTypeClass);

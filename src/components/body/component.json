@@ -10,16 +10,19 @@
       "choices": ["blade", "twig", "tsx"],
       "component": {
         "twig": {
-          "files": ["*.twig", "body.type.php"]
+          "files": ["*.twig", "body.type.php", "body.component.php"],
+          "dependencies": {
+            "@lotsof/components/renderer": "^1.0.0"
+          }
         },
         "blade": {
-          "files": ["*.blade.php", "body.type.php"],
+          "files": ["*.blade.php", "body.type.php", "body.component.php"],
           "dependencies": {
-            "@lotsof/components/blade": "^1.0.0"
+            "@lotsof/components/renderer": "^1.0.0"
           }
         },
         "tsx": {
-          "files": ["*.tsx", "body.type.ts"],
+          "files": ["*.tsx", "body.type.ts", "body.component.ts"],
           "packageJson": {
             "dependencies": {
               "react": "^18.0.0"

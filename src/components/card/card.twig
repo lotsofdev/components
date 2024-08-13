@@ -1,0 +1,34 @@
+<article class="card" id="{{ id }}">
+	{% if image or video %}
+		<figure class="_figure">
+			{% if image is not null %}
+				{% include 'image/image.twig' with image only  %}
+			{% elseif video is not null %}
+				{% include 'video/video.twig' with video only %}
+			{% endif %}
+			{% if areaFigure is defined %}
+				<div class="_area-figure">{{ areaFigure|raw }}</div>
+			{% endif %}
+		</figure>
+	{% endif %}
+	{% if body %}
+		<div class="_body">
+			{% if areaBeforeBody is defined %}
+				<div class="_area-before-body">
+					{{ areaBeforeBody|raw }}
+				</div>
+			{% endif %}
+			{% include 'body/body.twig' with body only %}
+			{% if areaBody %}
+				<div class="_area-body">
+					{{ areaBody|raw }}
+				</div>
+			{% endif %}
+			{% if areaAfterBody is defined %}
+				<div class="_area-before-body">
+					{{ areaAfterBody|raw }}
+				</div>
+			{% endif %}
+		</div>
+	{% endif %}
+</article>

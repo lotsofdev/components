@@ -1,0 +1,27 @@
+.card {
+  max-width: 450px;
+
+  ._figure {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+
+    img,
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  ._area-figure {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  ._body {
+  }
+}

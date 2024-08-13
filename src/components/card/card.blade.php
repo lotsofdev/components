@@ -2,9 +2,9 @@
     @if ($image || $video)
         <figure class="_figure">
             @if (@$image)
-                {!! $image !!}
+                @include('image.image', (array) $image)
             @elseif (@$video)
-                {!! $video !!}
+                @include('video.video', (array) $video)
             @endif
             @if (@$areaFigure)
                 <div class="_area-figure">{!! $areaFigure !!}</div>
@@ -18,7 +18,7 @@
                     {!! $areaBeforeBody !!}
                 </div>
             @endif
-            {!! $body !!}
+            @include('body.body', (array) $body)
             @if ($areaBody)
                 <div class="_area-body">
                     {!! $areaBody !!}

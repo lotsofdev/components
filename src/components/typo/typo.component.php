@@ -2,7 +2,7 @@
 
 namespace Components\Typo;
 
-class Typo extends \Lotsof\Components\Component
+class TypoComponent extends \Lotsof\Components\Component
 {
     public function toHtml(): string
     {

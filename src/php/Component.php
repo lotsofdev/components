@@ -4,37 +4,11 @@ namespace Lotsof\Components;
 
 class Component
 {
-    public static function preview($componentClass, $dataClass)
-    {
-        $method = $_SERVER['REQUEST_METHOD'];
-        if ($method === 'POST') {
-            $request_body = file_get_contents('php://input');
-            $data = json_decode($request_body, true)['component']['values'];
-            $componentData = new $dataClass();
-            $componentData->hydrate($data);
-            $component = new $componentClass($componentData);
-            print $component->toHtml();
-            return;
-        } else {
-            $componentData = $dataClass::mock();
-            $component = new $componentClass($componentData);
-            ?>
-            <?= $component->toHtml() ?>
-            <script carpenter type="application/json">{
-                        "id": "<?= $component->id; ?>",
-                        "name": "Body",
-                        "description": "Simple body (suptitle, titles, subtitle, lead, (rich)text and buttons) component",
-                        "schema": <?= json_encode($component->jsonSchema(), JSON_PRETTY_PRINT); ?>,
-                        "values": <?= json_encode($component->toObject(), JSON_PRETTY_PRINT); ?>
-                    }</script>
-            <?php
-        }
-    }
 
     protected string $id;
     private bool $_showErrors = false;
 
-    public function __construct(?\Lotsof\Types\Base $data, ?string $id = null)
+    public function __construct(?\Lotsof\Types\BaseType $data, ?string $id = null)
     {
         // save the data internaly
         if ($data !== null) {
@@ -102,7 +76,7 @@ class Component
     private function _resolveSchemaRefs(object $schema, string $schemaPath): object
     {
         // resolve $ref properties
-        $schema = \Sugar\object\deepMap($schema, function ($prop, &$value, &$object) use ($schemaPath) {
+        $schema = \Sugar\Object\deepMap($schema, function ($prop, &$value, &$object) use ($schemaPath) {
             if ($prop === '$ref') {
                 $relPath = realpath(dirname($schemaPath) . '/' . $value);
                 if (!file_exists($relPath)) {
@@ -119,7 +93,7 @@ class Component
         });
 
         // remove all $ref properties
-        $schema = \Sugar\object\deepFilter($schema, function ($prop, $value) {
+        $schema = \Sugar\Object\deepFilter($schema, function ($prop, $value) {
             if ($prop === '$ref') {
                 return false;
             }
@@ -135,7 +109,7 @@ class Component
         $folderPath = dirname($classInfo->getFileName());
         $className = explode("\\", basename($classInfo->getName()));
         $className = end($className);
-        $schemaPath = $folderPath . '/' . \Sugar\string\camelCase($className) . '.schema.json';
+        $schemaPath = $folderPath . '/' . \Sugar\String\camelCase($className) . '.schema.json';
         return $schemaPath;
     }
 

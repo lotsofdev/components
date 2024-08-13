@@ -2,11 +2,9 @@
 
 namespace Components\Hero;
 
-class Hero extends \Lotsof\Components\Component
+class HeroComponent extends \Lotsof\Components\Component
 {
-
-    protected \Lotsof\Types\Hero $data;
-
+    protected \Lotsof\Types\HeroType $data;
 
 
     public function toDomElement(): \DOMElement
@@ -39,10 +37,12 @@ class Hero extends \Lotsof\Components\Component
         $section->appendChild($body);
 
         // inject content into section
-        $bodyComponent = new \Components\Body\Body($this->body);
+        $bodyComponent = new \Components\Body\BodyComponent($this->body);
         $body->appendChild($dom->importNode($bodyComponent->toDomElement(), true));
 
         return $section;
 
     }
 }
+
+return HeroComponent::class;

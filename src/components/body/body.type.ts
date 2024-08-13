@@ -1,3 +1,3 @@
-import { __Body } from '@lotsof/types';
+import { __BodyType } from '@lotsof/types';
 
-export default class Body extends __Body {}
+export default class BodyType extends __BodyType {}
