@@ -1,8 +1,7 @@
 import type {
-  IComponentsComponentJson,
-  IComponentsComponentSettings,
-  IComponentsComposerJson,
-  IComponentsPackageJson,
+  TComponentsComponentJson,
+  TComponentsComponentSettings,
+  TComponentsComposerJson,
 } from './Components.types.js';
 
 import __ComponentsDependency from './ComponentsDependency.js';
@@ -29,15 +28,15 @@ import {
 import __camelCase from '../../../sugar/dist/shared/string/camelize.js';
 
 export default class ComponentsComponent {
-  private _settings: IComponentsComponentSettings;
-  private _componentJson: IComponentsComponentJson;
+  private _settings: TComponentsComponentSettings;
+  private _componentJson: TComponentsComponentJson;
   private _library: __ComponentsLibrary;
   private _rootDir: string;
   private _newName?: string;
   private _dependencies: Record<string, __ComponentsDependency> = {};
   private _originalName: string;
 
-  public get settings(): IComponentsComponentSettings {
+  public get settings(): TComponentsComponentSettings {
     return this._settings;
   }
 
@@ -53,7 +52,7 @@ export default class ComponentsComponent {
     return this._library;
   }
 
-  public get componentJson(): IComponentsComponentJson {
+  public get componentJson(): TComponentsComponentJson {
     return this._componentJson;
   }
 
@@ -72,7 +71,7 @@ export default class ComponentsComponent {
   constructor(
     rootDir: string,
     pkg: __ComponentsLibrary,
-    settings: IComponentsComponentSettings,
+    settings: TComponentsComponentSettings,
   ) {
     this._settings = settings;
     this._library = pkg;
@@ -179,7 +178,7 @@ export default class ComponentsComponent {
     this._updateDependencies();
   }
 
-  public extendsComposerJson(composerJson: IComponentsComposerJson): void {
+  public extendsComposerJson(composerJson: TComponentsComposerJson): void {
     this._componentJson.composerJson = __deepMerge(
       this._componentJson.composerJson ?? {},
       composerJson ?? {},
@@ -187,7 +186,7 @@ export default class ComponentsComponent {
     this._updateDependencies();
   }
 
-  public extendsPackageJson(packageJson: IComponentsPackageJson): void {
+  public extendsPackageJson(packageJson: TComponentsComposerJson): void {
     this._componentJson.packageJson = __deepMerge(
       this._componentJson.packageJson ?? {},
       packageJson ?? {},

@@ -1,7 +1,7 @@
 import type {
-  IComponentsLibraryJson,
-  IComponentsLibrarySettings,
-  IComponentsLibraryUpdateResult,
+  TComponentsLibraryJson,
+  TComponentsLibrarySettings,
+  TComponentsLibraryUpdateResult,
 } from './Components.types.js';
 
 import __childProcess from 'child_process';
@@ -17,18 +17,18 @@ import { __readJsonSync } from '@lotsof/sugar/fs';
 import __ComponentsComponent from './ComponentsComponent.js';
 
 export default class ComponentsLibrary {
-  private _settings: IComponentsLibrarySettings;
-  private _componentsJson: IComponentsLibraryJson;
+  private _settings: TComponentsLibrarySettings;
+  private _componentsJson: TComponentsLibraryJson;
   private _rootDir: string;
   private _dependencies: Record<string, __ComponentsDependency> = {};
 
   public updated: boolean = false;
 
-  public get settings(): IComponentsLibrarySettings {
+  public get settings(): TComponentsLibrarySettings {
     return this._settings;
   }
 
-  public get componentsJson(): IComponentsLibraryJson {
+  public get componentsJson(): TComponentsLibraryJson {
     return this._componentsJson;
   }
 
@@ -52,7 +52,7 @@ export default class ComponentsLibrary {
     return this._dependencies;
   }
 
-  constructor(rootDir: string, settings: IComponentsLibrarySettings) {
+  constructor(rootDir: string, settings: TComponentsLibrarySettings) {
     this._settings = settings;
     this._rootDir = rootDir;
     this._componentsJson = __readJsonSync(
@@ -195,7 +195,7 @@ export default class ComponentsLibrary {
     });
   }
 
-  async update(): Promise<IComponentsLibraryUpdateResult> {
+  async update(): Promise<TComponentsLibraryUpdateResult> {
     // get the componentsLibrary.json file from the updated component
     const componentsJson = __readJsonSync(
       `${this.settings.$components.libraryRootDir}/${this.name}/componentsLibrary.json`,
@@ -211,7 +211,7 @@ export default class ComponentsLibrary {
       if (!libraries[name]) {
         // register new library
         newSource = this.settings.$components?.registerLibraryFromSettings(
-          <IComponentsLibrarySettings>sourceSettings,
+          <TComponentsLibrarySettings>sourceSettings,
         );
       }
 

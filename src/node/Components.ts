@@ -8,12 +8,12 @@ import { __getConfig } from '@lotsof/config';
 import './Components.config.js';
 
 import {
-  IComponentsAddComponentOptions,
-  IComponentsAddComponentResult,
-  IComponentsComponentJson,
-  IComponentsLibrariesUpdateResult,
-  IComponentsLibrarySettings,
-  IComponentsSettings,
+  TComponentsAddComponentOptions,
+  TComponentsAddComponentResult,
+  TComponentsComponentJson,
+  TComponentsLibrariesUpdateResult,
+  TComponentsLibrarySettings,
+  TComponentsSettings,
 } from './Components.types.js';
 
 import { __packageRootDir } from '@lotsof/sugar/package';
@@ -35,13 +35,13 @@ import { __ComponentsComponent, __ComponentsLibrary } from './_exports.js';
 
 export default class Components {
   private _libraries: Record<string, __ComponentsLibrary> = {};
-  public settings: IComponentsSettings;
+  public settings: TComponentsSettings;
 
   public get libraryRootDir(): string {
     return this.settings.libraryRootDir;
   }
 
-  constructor(settings?: IComponentsSettings) {
+  constructor(settings?: TComponentsSettings) {
     this.settings = {
       ...(__getConfig('components.settings') ?? {}),
       ...(settings ?? {}),
@@ -67,13 +67,13 @@ export default class Components {
   }
 
   public registerLibraryFromSettings(
-    settings: IComponentsLibrarySettings,
+    settings: TComponentsLibrarySettings,
   ): __ComponentsLibrary {
     settings.$components = this;
 
     const library = new __ComponentsLibrary(
       `${this.libraryRootDir}/${settings.name}`,
-      <IComponentsLibrarySettings>settings,
+      <TComponentsLibrarySettings>settings,
     );
 
     return this.registerLibrary(library);
@@ -88,7 +88,7 @@ export default class Components {
     return this._libraries;
   }
 
-  public async updateLibraries(): Promise<IComponentsLibrariesUpdateResult> {
+  public async updateLibraries(): Promise<TComponentsLibrariesUpdateResult> {
     // updating libraries
     const libraries = this.getLibraries();
     for (let [libraryName, library] of Object.entries(libraries)) {
@@ -140,9 +140,9 @@ export default class Components {
 
   public async addComponent(
     componentId: string,
-    options?: IComponentsAddComponentOptions,
+    options?: TComponentsAddComponentOptions,
     isDependency = false,
-  ): Promise<IComponentsAddComponentResult | undefined> {
+  ): Promise<TComponentsAddComponentResult | undefined> {
     options = {
       dir: `${__packageRootDir()}/src/components`,
       y: false,
@@ -213,7 +213,7 @@ export default class Components {
     componentDestinationDir = `${options.dir}/${component.name}`;
 
     // read the component.json file
-    const componentJson: IComponentsComponentJson = __readJsonSync(
+    const componentJson: TComponentsComponentJson = __readJsonSync(
       `${component.rootDir}/component.json`,
     );
 

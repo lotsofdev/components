@@ -70,4 +70,6 @@
 body {
   font: s-font(default);
   color: s-color(main, text);
+
+  --my-variable: 'hello';
 }

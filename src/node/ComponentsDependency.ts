@@ -1,4 +1,4 @@
-import type { IComponentsDependency } from './Components.types.js';
+import type { TComponentsDependency } from './Components.types.js';
 
 import { __addPackageDependencies } from '@lotsof/sugar/package';
 
@@ -31,7 +31,7 @@ export default class ComponentsDependency {
     return this._level;
   }
 
-  constructor(dependency: IComponentsDependency) {
+  constructor(dependency: TComponentsDependency) {
     this._type = dependency.type;
     this._name = dependency.name;
     this._version = dependency.version;

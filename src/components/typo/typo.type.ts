@@ -1,7 +1,7 @@
-import type { ITypo } from '@lotsof/types';
+import type { TTypoProps } from '@lotsof/types';
 import { __Typo } from '@lotsof/types';
 
-export type { ITypo };
+export type { TTypoProps };
 export default class Typo extends __Typo {
-  protected data?: ITypo;
+  protected data?: TTypoProps;
 }

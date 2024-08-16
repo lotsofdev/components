@@ -5,72 +5,149 @@ namespace Lotsof\Components;
 class Component
 {
 
-    protected string $id;
-    private bool $_showErrors = false;
+    protected object $values;
+    protected string $path;
+    protected object $json;
 
-    public function __construct(?\Lotsof\Types\BaseType $data, ?string $id = null)
+    public function __construct(string $path, ?object $values = null)
     {
-        // save the data internaly
-        if ($data !== null) {
-            $this->data = $data;
-        }
-
-        // handle id
-        if ($id === null && $data->has('id')) {
-            $id = $data->id;
-        }
-        if ($id === null) {
-            $classInfo = new \ReflectionClass($this);
-            $classFullName = $classInfo->getName();
-            $classNameParts = explode('\\', $classFullName);
-            $className = end($classNameParts);
-            $this->id = strtolower($className) . '-' . uniqid();
+        if ($values) {
+            $this->values = $values;
         } else {
-            $this->id = $id;
+            $this->values = (object) [];
         }
+        $this->path = $path;
+        $this->json = $this->getComponentJson();
     }
 
-    public function showErrors(bool $value): void
+    public function getPath(): string
     {
-        $this->_showErrors = $value;
+        return $this->path;
     }
 
-    public function __get($prop): mixed
+    public function getName(): string
     {
-        if (property_exists($this->data, $prop)) {
-            return $this->data->$prop;
-        }
-        return null;
+        return $this->json->name;
     }
 
-    public function __toString(): string
+    public function getDescription(): string
     {
-        if (method_exists($this, 'toHtml')) {
-            return $this->toHtml();
-        }
-        return '';
+        return $this->json->description;
     }
 
-    public function has(string $prop): bool
+    public function getVersion(): string
     {
-        if (!property_exists($this->data, $prop)) {
-            return false;
-        }
-        if (is_string($this->data->$prop) && $this->data->$prop === '') {
-            return false;
-        }
-        if (is_array($this->data->$prop) && count($this->data->$prop) === 0) {
-            return false;
-        }
-        if ($this->data->$prop === null) {
-            return false;
-        }
-        return true;
+        return $this->json->version;
     }
 
-    public function set(string $key, mixed $value): void
+    public function setValues(object $values): void
     {
-        $this->data->set($key, $value);
+        $this->values = $values;
+    }
+
+    public function getValues(): object
+    {
+        return $this->values;
+    }
+
+    public function hasValues(): bool
+    {
+        return count((array) $this->values) > 0;
+    }
+
+    public function toObject(): object
+    {
+        return (object) [
+            'path' => $this->path,
+            'name' => $this->json->name,
+            'description' => $this->getDescription(),
+            'version' => $this->getVersion(),
+            'json' => $this->json,
+            'files' => $this->getFiles(),
+            'engines' => $this->getEngines(),
+            'mocks' => $this->getMocks(),
+            'schema' => $this->getComponentSchema(),
+            'values' => $this->getValues()
+        ];
+    }
+
+    public function getFiles(): array
+    {
+        $files = glob($this->path . '/*');
+        $files = array_merge($files, glob($this->path . '/**/*'));
+        return $files;
+    }
+
+    public function getComponentJson(): object
+    {
+        $componentJsonPath = $this->path . '/component.json';
+        if (!file_exists($componentJsonPath)) {
+            return null;
+        }
+        $componentJson = json_decode(file_get_contents($componentJsonPath));
+        return $componentJson;
+    }
+
+    public function getEngines(): array
+    {
+        // build a list of supported engines extensions for glob
+        $enginesExtensions = [];
+        foreach (FACTORY_SUPPORTED_ENGINES as $engine => $extensions) {
+            $enginesExtensions = array_merge($enginesExtensions, $extensions);
+        }
+
+        // check for ".preview" files
+        $files = glob($this->path . '/*{' . implode(',', $enginesExtensions) . '}', GLOB_BRACE);
+
+        // build the supported engines list
+        $supportedEngines = [];
+        foreach ($files as $filePath) {
+            foreach (FACTORY_SUPPORTED_ENGINES as $engine => $extensions) {
+                if (preg_match('/(' . implode('|', $extensions) . ')$/', $filePath)) {
+                    $supportedEngines[] = $engine;
+                }
+            }
+        }
+
+        return $supportedEngines;
+    }
+
+    public function getMocks(): array
+    {
+        // build a list of supported engines extensions for glob
+        $mocksExtensions = [];
+        foreach (FACTORY_SUPPORTED_MOCKS_BY_ENGINES as $engine => $extensions) {
+            $mocksExtensions = array_merge($mocksExtensions, $extensions);
+        }
+
+        // check for ".preview" files
+        $files = glob($this->path . '/*{' . implode(',', $mocksExtensions) . '}', GLOB_BRACE);
+
+        // build the supported engines list
+        $supportedEngines = [];
+        foreach ($files as $filePath) {
+            foreach (FACTORY_SUPPORTED_MOCKS_BY_ENGINES as $engine => $extensions) {
+                if (preg_match('/(' . implode('|', $extensions) . ')$/', $filePath)) {
+                    $supportedEngines[$engine] = $filePath;
+                }
+            }
+        }
+
+        return $supportedEngines;
+    }
+
+    public function getComponentSchema(): mixed
+    {
+        $componentSchemaPath = $this->path . '/' . $this->getName() . '.schema.json';
+        if (!file_exists($componentSchemaPath)) {
+            return null;
+        }
+        $componentJson = json_decode(file_get_contents($componentSchemaPath));
+
+        // resolve $ref properties
+        $componentJson = $this->_resolveSchemaRefs($componentJson, $componentSchemaPath);
+
+        return $componentJson;
     }
 
     private function _resolveSchemaRefs(object $schema, string $schemaPath): object
@@ -101,76 +178,6 @@ class Component
         });
 
         return $schema;
-    }
-
-    public function jsonSchemaPath(): string
-    {
-        $classInfo = new \ReflectionClass($this);
-        $folderPath = dirname($classInfo->getFileName());
-        $className = explode("\\", basename($classInfo->getName()));
-        $className = end($className);
-        $schemaPath = $folderPath . '/' . \Sugar\String\camelCase($className) . '.schema.json';
-        return $schemaPath;
-    }
-
-    public function hasJsonSchema(): bool
-    {
-        $path = $this->jsonSchemaPath();
-        return file_exists($path);
-    }
-
-    public function jsonSchema(): object
-    {
-        $schemaPath = $this->jsonSchemaPath();
-        if ($this->hasJsonSchema()) {
-            $schema = file_get_contents($schemaPath);
-            $schema = json_decode($schema);
-            $schema = $this->_resolveSchemaRefs($schema, $schemaPath);
-            return $schema;
-        }
-
-        throw new \Exception('Schema file not found for class ' . get_class($this) . ' at path "' . $schemaPath . ". Either create it or implement your own \"jsonSchema\" method...");
-    }
-
-    public function toObject(): object
-    {
-        $showErrors = $this->_showErrors;
-        $this->showErrors(false);
-
-        $vars = $this->data->toObject();
-
-        // reset show errors
-        $this->showErrors($showErrors);
-
-        return (object) $vars;
-    }
-
-    public function toHtml(): string
-    {
-        // if ($this->_showErrors === true) {
-        //     $validationResults = $this->validate();
-        //     if (count($validationResults)) {
-        //         $classInfo = new \ReflectionClass($this);
-        //         $className = $classInfo->getName();
-        //         $errorsHtml = ['<div class="error">'];
-        //         $errorsHtml[] = '<h2 class="error_title">' . $className . ' | Validation errors</h2>';
-        //         $errorsHtml[] = '<ol class="error_items">';
-        //         foreach ($validationResults as $error) {
-        //             $property = $error['property'] !== '' ? $error['property'] : 'unknown';
-        //             $errorsHtml[] = '<li class="error_item"><span class="error_prop">' . $property . '</span>: <span class="error_message">' . $error['message'] . '</span>';
-        //         }
-        //         $errorsHtml[] = '</ol>';
-        //         $errorsHtml[] = '</div>';
-        //         return implode("\n", $errorsHtml);
-        //     }
-        // }
-
-        if (!method_exists($this, 'toDomElement')) {
-            throw new \Exception('toDomElement method not found in class ' . get_class($this) . '. You will need to implement your own \"toHtml\" method...');
-        }
-        $dom = new \DOMDocument('1.0', 'utf-8');
-        $dom->appendChild($dom->importNode($this->toDomElement(), true));
-        return $dom->saveHTML();
     }
 
 }

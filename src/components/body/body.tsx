@@ -1,7 +1,7 @@
-import { IBodyProps } from '@lotsof/types/src/types/body/body.type';
+import { TBodyProps } from '@lotsof/types/src/types/body/body.type';
 import React from 'react';
 
-export default function Body(props: IBodyProps) {
+export default function Body(props: TBodyProps) {
   const Subtitle = `h${props.suptitleLevel}`,
     Title = `h${props.titleLevel}`,
     Suptitle = `h${props.suptitleLevel}`;
