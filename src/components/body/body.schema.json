@@ -8,7 +8,8 @@
     "id": {
       "type": "string",
       "title": "ID",
-      "description": "Unique identifier"
+      "description": "Unique identifier",
+      "placeholder": "body-1"
     },
     "suptitle": {
       "type": "string",
@@ -18,12 +19,14 @@
     "title": {
       "type": "string",
       "title": "Title",
-      "description": "Title of the body"
+      "description": "Title of the body",
+      "minLength": 100000
     },
     "subtitle": {
       "type": "string",
       "title": "Subtitle",
-      "description": "Subtitle of the body"
+      "description": "Subtitle of the body",
+      "placeholder": "Hello world"
     },
     "lead": {
       "type": "string",

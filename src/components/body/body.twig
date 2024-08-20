@@ -1,25 +1,25 @@
-<div class="body typo-rhythm typo-format">
+<div class="body {% if typoClasses %} typo-rhythm typo-format {% endif %}">
 
 	twig
 
 	{% if suptitle != null %}
-		<h{{suptitleLevel}} class="_suptitle typo-h{{ suptitleLevel }}">{{ suptitle }}</h{{suptitleLevel}}>
+		<h{{suptitleLevel}} class="_suptitle {% if typoClasses %} typo-h{{ suptitleLevel }} {% endif %}">{{ suptitle }}</h{{suptitleLevel}}>
 	{% endif %}
 
 	{% if title != null %}
-		<h{{titleLevel}} class="_title typo-h{{ titleLevel }}">{{ title }}</h{{titleLevel}}>
+		<h{{titleLevel}} class="_title {% if typoClasses %} typo-h{{ titleLevel }} {% endif %}">{{ title }}</h{{titleLevel}}>
 	{% endif %}
 
 	{% if subtitle != null %}
-		<h{{subtitleLevel}} class="_subtitle typo-h{{ subtitleLevel }}">{{ subtitle }}</h{{subtitleLevel}}>
+		<h{{subtitleLevel}} class="_subtitle {% if typoClasses %} typo-h{{ subtitleLevel }} {% endif %}">{{ subtitle }}</h{{subtitleLevel}}>
 	{% endif %}
 
 	{% if lead != null %}
-		<p class="_lead typo-lead">{{ lead }}</p>
+		<p class="_lead {% if typoClasses %} typo-lead {% endif %}">{{ lead }}</p>
 	{% endif %}
 
 	{% if text != null %}
-		<p class="_text typo-p">{{ text }}</p>
+		<p class="_text {% if typoClasses %} typo-p {% endif %}">{{ text }}</p>
 	{% endif %}
 
 	{% if buttons is defined and buttons is iterable %}

@@ -1,32 +1,41 @@
-<div class="body typo-rhythm typo-format">
+@if ($typoClasses)
+    @php
+        $bodyClasses = 'typo-rhythm typo-format';
+        $suptitleClasses = 'typo-h' . $suptitleLevel;
+        $titleClasses = 'typo-h' . $titleLevel;
+        $subtitleClasses = 'typo-h' . $subtitleLevel;
+        $leadClasses = 'typo-lead';
+        $textClasses = 'typo-p';
+    @endphp
+@endif
 
-    blade
+<div class="body {{ $bodyClasses }}">
 
     @if ($suptitle !== '')
-        <h{{ $suptitleLevel }} class="_suptitle typo-h{{ $suptitleLevel }}">{{ $suptitle }}</h{{ $suptitleLevel }}>
+        <h{{ $suptitleLevel }} class="_suptitle {{ $suptitleClasses }}">{{ $suptitle }}</h{{ $suptitleLevel }}>
     @endif
 
     @if ($title !== '')
-        <h{{ $titleLevel }} class="_title typo-h{{ $titleLevel }}">{{ $title }}</h{{ $titleLevel }}>
+        <h{{ $titleLevel }} class="_title {{ $titleClasses }}">{{ $title }}</h{{ $titleLevel }}>
     @endif
 
     @if ($subtitle !== '')
-        <h{{ $subtitleLevel }} class="_subtitle typo-h{{ $subtitleLevel }}">{{ $subtitle }}</h{{ $subtitleLevel }}>
+        <h{{ $subtitleLevel }} class="_subtitle {{ $subtitleClasses }}">{{ $subtitle }}</h{{ $subtitleLevel }}>
     @endif
 
     @if ($lead !== '')
-        <p class="_lead typo-lead">{{ $lead }}</p>
+        <p class="_lead {{ $leadClasses }}">{{ $lead }}</p>
     @endif
 
     @if ($text !== null)
-        <p class="_text typo-p">{{ $text }}</p>
+        <p class="_text {{ $textClasses }}</p>
     @endif
 
     @if (is_array($buttons) && count($buttons) > 0)
-        <div class="_buttons">
-            @foreach ($buttons as $button)
-                @include ('button.button', (array) $button)
-            @endforeach
+                <div class=" _buttons">
+                @foreach ($buttons as $button)
+                    @include ('button.button', (array) $button)
+                @endforeach
         </div>
     @endif
 
